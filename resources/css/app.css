@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -6,34 +6,96 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Sora', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
-    --color-ink: #151515;
-    --color-paper: #f6f2e9;
-    --color-accent: #0a7c5a;
-    --color-accent-2: #e69a2d;
+    --font-sans:
+        "Sora", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --color-navy: #1e3a5f;
+    --color-forest-green: #1b6b42;
+    --color-white: #ffffff;
+    --color-dark-text: #0a0a0a;
+    --color-light-gray: #f5f5f5;
 }
 
 @layer base {
     html {
         font-family: var(--font-sans);
-        color: var(--color-ink);
-        background-color: var(--color-paper);
+        color: var(--color-dark-text);
+        background-color: var(--color-white);
     }
 
     body {
         min-height: 100vh;
-        background: radial-gradient(1200px 600px at 15% -10%, #fff6d8 0%, #f6f2e9 55%) fixed;
+        background-color: var(--color-white);
     }
 
+    /* Senior-friendly: Larger default text - DIPERKECIL */
+    p {
+        @apply text-sm;
+    }
+
+    label {
+        @apply text-sm font-bold;
+    }
+
+    th,
+    td {
+        @apply text-xs;
+    }
+
+    /* Large, accessible buttons - DIPERKECIL */
     .btn-primary {
-        @apply inline-flex items-center justify-center rounded-lg px-4 py-2 font-semibold text-white;
-        background-color: var(--color-accent);
+        @apply inline-flex items-center justify-center rounded-lg px-4 py-2 font-bold text-white text-sm;
+        background-color: var(--color-forest-green);
+        transition: background-color 0.2s;
+    }
+
+    .btn-primary:hover {
+        background-color: #14591b;
     }
 
     .btn-secondary {
-        @apply inline-flex items-center justify-center rounded-lg px-4 py-2 font-semibold text-black;
-        background-color: #f2d28b;
+        @apply inline-flex items-center justify-center rounded-lg px-4 py-2 font-bold text-white text-sm;
+        background-color: #6b7280;
+        transition: background-color 0.2s;
+    }
+
+    .btn-secondary:hover {
+        background-color: #4b5563;
+    }
+
+    /* Large input fields - DIPERKECIL */
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="password"],
+    input[type="date"],
+    select,
+    textarea {
+        @apply text-sm font-semibold py-2 px-3;
+        border-width: 2px;
+    }
+
+    /* High contrast form elements */
+    input,
+    select,
+    textarea {
+        border-color: var(--color-navy) !important;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: var(--color-forest-green) !important;
+        box-shadow: 0 0 0 3px rgba(27, 107, 66, 0.1);
+    }
+
+    /* Large checkboxes and radio buttons - DIPERKECIL */
+    input[type="checkbox"],
+    input[type="radio"] {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
     }
 
     #scanner-preview,
@@ -50,5 +112,116 @@
         height: 100% !important;
         object-fit: cover;
         border-radius: 0.375rem;
+    }
+
+    /* Senior-friendly: Larger, clearer cards and sections - DIPERKECIL */
+    .rounded-2xl {
+        @apply rounded-2xl;
+    }
+
+    section {
+        @apply p-4 lg:p-5;
+    }
+
+    /* High-contrast tables */
+    table {
+        @apply border-collapse w-full;
+    }
+
+    thead {
+        background-color: var(--color-navy);
+    }
+
+    thead th {
+        @apply text-white font-bold text-sm py-2 px-2;
+    }
+
+    tbody td {
+        @apply py-2 px-2 border-b-2 border-gray-300;
+    }
+
+    tbody tr:nth-child(odd) {
+        background-color: var(--color-light-gray);
+    }
+
+    tbody tr:hover {
+        background-color: #eeeeee;
+    }
+
+    /* Header styling - DIPERKECIL */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-bold text-gray-900;
+    }
+
+    h1 {
+        @apply text-2xl lg:text-3xl;
+    }
+
+    h2 {
+        @apply text-xl lg:text-2xl;
+    }
+
+    h3 {
+        @apply text-lg lg:text-xl;
+    }
+
+    /* Card styling for senior-friendly UI */
+    section {
+        border-width: 2px;
+        border-color: #e5e7eb;
+        background-color: #ffffff;
+    }
+
+    /* Pagination styling - DIPERKECIL */
+    .pagination {
+        @apply flex gap-2 justify-center mt-4;
+    }
+
+    .pagination a,
+    .pagination span {
+        @apply px-2 py-1 rounded-md font-bold text-xs border-2;
+    }
+
+    .pagination a {
+        border-color: #1b6b42;
+        color: #1b6b42;
+    }
+
+    .pagination a:hover {
+        background-color: #1b6b42;
+        color: white;
+    }
+
+    .pagination .active span {
+        background-color: #1b6b42;
+        color: white;
+        border-color: #1b6b42;
+    }
+
+    /* Form group styling */
+    .form-group {
+        @apply mb-4;
+    }
+
+    /* Alert styling - DIPERKECIL */
+    .alert {
+        @apply text-sm font-semibold rounded-lg border-2 p-2;
+    }
+
+    .alert-success {
+        background-color: #dcfce7;
+        border-color: #22c55e;
+        color: #166534;
+    }
+
+    .alert-error {
+        background-color: #fee2e2;
+        border-color: #ef4444;
+        color: #991b1b;
     }
 }

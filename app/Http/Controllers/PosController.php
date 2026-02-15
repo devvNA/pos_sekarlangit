@@ -17,10 +17,15 @@ class PosController extends Controller
     {
         $cart = session('pos_cart', []);
         $total = collect($cart)->sum('subtotal');
+        $products = Product::where('active', true)
+            ->select('id', 'name', 'barcode', 'price_sell', 'stock')
+            ->orderBy('name')
+            ->get();
 
         return view('pos.index', [
             'cart' => $cart,
             'total' => $total,
+            'products' => $products,
         ]);
     }
 

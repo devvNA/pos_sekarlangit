@@ -6,21 +6,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebarOverlay = document.getElementById('sidebar-overlay');
     const sidebarToggle = document.getElementById('sidebar-toggle');
     const sidebarClose = document.getElementById('sidebar-close');
-    const barcodeInput = document.getElementById('barcode-input');
-    const addForm = document.getElementById('pos-add-form');
     const totalEl = document.getElementById('pos-total');
     const paidInput = document.getElementById('paid-input');
     const changeInput = document.getElementById('change-input');
     const paymentSelect = document.querySelector('select[name="payment_method"]');
+    
+    // Scanner elements (modal)
     const scanToggle = document.getElementById('scan-toggle');
-    const manualInput = document.getElementById('manual-input');
     const scannerPreview = document.getElementById('scanner-preview');
     const scannerStatus = document.getElementById('scanner-status');
+    const scannerWrapper = document.getElementById('scanner-wrapper');
+    const scanLine = document.getElementById('scan-line');
+    const modalBarcodeInput = document.getElementById('modal-barcode-input');
+    const modalAddForm = document.getElementById('modal-add-form');
+    
+    // Inventory scanner elements
     const inventoryBarcodeInput = document.getElementById('inventory-barcode-input');
     const inventoryScanToggle = document.getElementById('inventory-scan-toggle');
     const inventoryManualInput = document.getElementById('inventory-manual-input');
     const inventoryScannerPreview = document.getElementById('inventory-scanner-preview');
     const inventoryScannerStatus = document.getElementById('inventory-scanner-status');
+    
     let scanner = null;
     let scanning = false;
     let inventoryScanner = null;
@@ -28,6 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastScanAt = 0;
     let lastInventoryScanAt = 0;
     const scanBeep = new Audio('/audio/scanner-beep.mp3');
+    
+    // Export scanner state untuk akses dari view
+    window.posScanner = {
+        get instance() { return scanner; },
+        get isScanning() { return scanning; },
+        set isScanning(value) { scanning = value; }
+    };
 
     const playBeep = () => {
         try {
@@ -71,18 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
         sidebarClose.addEventListener('click', closeSidebar);
     }
 
-    if (barcodeInput) {
-        barcodeInput.focus();
-        barcodeInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                if (addForm) {
-                    addForm.submit();
-                }
-            }
-        });
-    }
-
     const updateChange = () => {
         if (!totalEl || !paidInput || !changeInput) {
             return;
@@ -111,12 +112,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateChange();
 
-    if (manualInput && barcodeInput) {
-        manualInput.addEventListener('click', () => {
-            barcodeInput.focus();
+    // Modal barcode input handling
+    if (modalBarcodeInput) {
+        modalBarcodeInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                if (modalAddForm) {
+                    modalAddForm.submit();
+                }
+            }
         });
     }
 
+    // POS Scanner (in modal)
     if (scanToggle && scannerPreview) {
         scanToggle.addEventListener('click', async () => {
             if (!scanner) {
@@ -126,7 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!scanning) {
                 try {
                     scanning = true;
+                    if (window.posScanner) window.posScanner.isScanning = true;
                     scanToggle.textContent = 'Hentikan Scan';
+                    if (scannerWrapper) scannerWrapper.classList.add('scanning-active');
+                    if (scanLine) scanLine.classList.add('scanning');
                     if (scannerStatus) {
                         scannerStatus.textContent = 'Status: memulai kamera...';
                     }
@@ -134,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         { facingMode: 'environment' },
                         {
                             fps: 10,
-                            qrbox: { width: 240, height: 140 },
+                            qrbox: { width: 260, height: 160 },
                         },
                         (decodedText) => {
                             const now = Date.now();
@@ -142,22 +153,24 @@ document.addEventListener('DOMContentLoaded', () => {
                                 return;
                             }
                             lastScanAt = now;
-                            if (barcodeInput) {
-                                barcodeInput.value = decodedText;
-                                barcodeInput.focus();
+                            if (modalBarcodeInput) {
+                                modalBarcodeInput.value = decodedText;
                             }
                             if (scannerStatus) {
                                 scannerStatus.textContent = `Status: terbaca ${decodedText}`;
                             }
                             playBeep();
-                            if (addForm) {
-                                addForm.submit();
+                            if (modalAddForm) {
+                                modalAddForm.submit();
                             }
                         }
                     );
                 } catch (error) {
                     scanning = false;
+                    if (window.posScanner) window.posScanner.isScanning = false;
                     scanToggle.textContent = 'Mulai Scan Kamera';
+                    if (scannerWrapper) scannerWrapper.classList.remove('scanning-active');
+                    if (scanLine) scanLine.classList.remove('scanning');
                     if (scannerStatus) {
                         scannerStatus.textContent = 'Status: gagal membuka kamera.';
                     }
@@ -167,7 +180,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     await scanner.stop();
                 } finally {
                     scanning = false;
+                    if (window.posScanner) window.posScanner.isScanning = false;
                     scanToggle.textContent = 'Mulai Scan Kamera';
+                    if (scannerWrapper) scannerWrapper.classList.remove('scanning-active');
+                    if (scanLine) scanLine.classList.remove('scanning');
                     if (scannerStatus) {
                         scannerStatus.textContent = 'Status: berhenti.';
                     }
@@ -176,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Inventory Scanner
     if (inventoryManualInput && inventoryBarcodeInput) {
         inventoryManualInput.addEventListener('click', () => {
             inventoryBarcodeInput.focus();
@@ -199,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         { facingMode: 'environment' },
                         {
                             fps: 10,
-                            qrbox: { width: 240, height: 140 },
+                            qrbox: { width: 260, height: 160 },
                         },
                         (decodedText) => {
                             const now = Date.now();

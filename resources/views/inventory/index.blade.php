@@ -20,7 +20,7 @@
             </div>
             <div class="flex flex-wrap gap-2">
                 <form class="flex gap-2" method="get" action="{{ route('inventory.index') }}">
-                    <input name="q" value="{{ $search }}" class="rounded-lg border border-black/20 bg-white px-3 py-2 text-sm" type="text" placeholder="Cari produk/barcode" />
+                    <input name="q" value="{{ $search }}" class="w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm" type="text" placeholder="Cari produk/barcode" />
                     <button class="btn-secondary" type="submit">Cari</button>
                 </form>
                 <a class="btn-primary" href="{{ route('inventory.create') }}">Tambah Produk</a>
@@ -29,14 +29,14 @@
 
         <div class="mt-4 overflow-hidden rounded-xl border border-black/10">
             <table class="w-full text-left text-sm">
-                <thead class="bg-black/5 text-xs uppercase tracking-wide text-black/60">
+                <thead class="bg-[#1e3a5f] text-xs font-semibold text-white uppercase tracking-wide">
                     <tr>
                         <th class="px-3 py-2">Produk</th>
                         <th class="px-3 py-2">Barcode</th>
                         <th class="px-3 py-2">Stok</th>
                         <th class="px-3 py-2">Harga Jual</th>
                         <th class="px-3 py-2">Status</th>
-                        <th class="px-3 py-2"></th>
+                        <th class="px-3 py-2 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,37 +44,37 @@
                         <tr class="border-t border-black/10">
                             <td class="px-3 py-3">
                                 <p class="font-semibold">{{ $product->name }}</p>
-                                <p class="text-xs text-black/50">{{ $product->supplier?->name ?? 'Tanpa pemasok' }}</p>
+                                <p class="text-xs text-black/60">{{ $product->supplier?->name ?? 'Tanpa pemasok' }}</p>
                             </td>
                             <td class="px-3 py-3">{{ $product->barcode }}</td>
                             <td class="px-3 py-3">
                                 {{ $product->stock }} {{ $product->unit }}
                                 @if ($product->stock <= $product->min_stock)
-                                    <span class="ml-2 text-xs font-semibold text-red-600">Menipis</span>
+                                    <span class="ml-1 text-xs font-semibold text-red-600">(Menipis)</span>
                                 @endif
                             </td>
-                            <td class="px-3 py-3">Rp {{ number_format($product->price_sell, 0, ',', '.') }}</td>
+                            <td class="px-3 py-3 font-semibold">Rp {{ number_format($product->price_sell, 0, ',', '.') }}</td>
                             <td class="px-3 py-3">
                                 @if ($product->active)
-                                    <span class="text-xs font-semibold text-emerald-700">Aktif</span>
+                                    <span class="text-xs font-semibold text-green-600">Aktif</span>
                                 @else
-                                    <span class="text-xs font-semibold text-black/50">Nonaktif</span>
+                                    <span class="text-xs font-semibold text-gray-500">Nonaktif</span>
                                 @endif
                             </td>
-                            <td class="px-3 py-3 text-right">
-                                <div class="flex justify-end gap-2">
-                                    <a class="text-xs font-semibold text-emerald-700" href="{{ route('inventory.edit', $product->id) }}">Edit</a>
-                                    <form method="post" action="{{ route('inventory.destroy', $product->id) }}" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
+                            <td class="px-3 py-3">
+                                <div class="flex items-center justify-center gap-3">
+                                    <a class="text-xs font-semibold text-blue-600 hover:underline" href="{{ route('inventory.edit', $product->id) }}">Edit</a>
+                                    <form class="inline" method="post" action="{{ route('inventory.destroy', $product->id) }}" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="text-xs font-semibold text-red-600" type="submit">Hapus</button>
+                                        <button class="text-xs font-semibold text-red-600 hover:underline" type="submit">Hapus</button>
                                     </form>
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr class="border-t border-black/10">
-                            <td class="px-3 py-3" colspan="6">Belum ada data produk.</td>
+                            <td class="px-3 py-3 text-center text-gray-500" colspan="6">Belum ada data produk.</td>
                         </tr>
                     @endforelse
                 </tbody>
