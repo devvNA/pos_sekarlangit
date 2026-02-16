@@ -46,7 +46,7 @@
                                 <p class="font-semibold">{{ $product->name }}</p>
                                 <p class="text-xs text-black/60">{{ $product->supplier?->name ?? 'Tanpa pemasok' }}</p>
                             </td>
-                            <td class="px-3 py-3">{{ $product->barcode }}</td>
+                            <td class="px-3 py-3">{{ $product->barcode ?? '-' }}</td>
                             <td class="px-3 py-3">
                                 {{ $product->stock }} {{ $product->unit }}
                                 @if ($product->stock <= $product->min_stock)

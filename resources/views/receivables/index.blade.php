@@ -12,7 +12,7 @@
 
         <div class="mt-4 overflow-hidden rounded-xl border border-black/10">
             <table class="w-full text-left text-sm">
-                <thead class="bg-black/5 text-xs uppercase tracking-wide text-black/60">
+                <thead class="background-color: #1e3a5f; tracking-wide text-black/60">
                     <tr>
                         <th class="px-3 py-2">Pelanggan</th>
                         <th class="px-3 py-2">Total</th>

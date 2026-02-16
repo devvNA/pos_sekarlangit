@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,9 +23,9 @@ class Product extends Model
     ];
 
     protected $casts = [
-        'price_buy' => 'decimal:2',
+        'price_buy'  => 'decimal:2',
         'price_sell' => 'decimal:2',
-        'active' => 'boolean',
+        'active'     => 'boolean',
     ];
 
     public function supplier(): BelongsTo

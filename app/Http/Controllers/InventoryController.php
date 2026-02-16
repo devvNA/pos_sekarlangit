@@ -11,6 +11,13 @@ use Illuminate\View\View;
 
 class InventoryController extends Controller
 {
+    private function normalizeCurrency(?string $value): ?string
+    {
+        $digits = preg_replace('/\D+/', '', $value ?? '');
+
+        return $digits === '' ? null : $digits;
+    }
+
     public function index(Request $request): View
     {
         $query = Product::query()->with('supplier');
@@ -41,9 +48,14 @@ class InventoryController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $request->merge([
+            'price_buy' => $this->normalizeCurrency($request->input('price_buy')),
+            'price_sell' => $this->normalizeCurrency($request->input('price_sell')),
+        ]);
+
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'barcode' => 'required|string|max:13|unique:products,barcode',
+            'barcode' => 'nullable|string|max:13|unique:products,barcode',
             'unit' => 'required|string|max:50',
             'price_buy' => 'required|numeric|min:0',
             'price_sell' => 'required|numeric|min:0',
@@ -72,9 +84,14 @@ class InventoryController extends Controller
 
     public function update(Request $request, Product $product): RedirectResponse
     {
+        $request->merge([
+            'price_buy' => $this->normalizeCurrency($request->input('price_buy')),
+            'price_sell' => $this->normalizeCurrency($request->input('price_sell')),
+        ]);
+
         $data = $request->validate([
             'name' => 'required|string|max:255',
-            'barcode' => 'required|string|max:13|unique:products,barcode,'.$product->id,
+            'barcode' => 'nullable|string|max:13|unique:products,barcode,'.$product->id,
             'unit' => 'required|string|max:50',
             'price_buy' => 'required|numeric|min:0',
             'price_sell' => 'required|numeric|min:0',

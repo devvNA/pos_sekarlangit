@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->nullOnDelete();
             $table->string('name');
-            $table->string('barcode', 13)->unique();
+            $table->string('barcode', 13)->unique()->nullable();
             $table->string('unit')->default('pcs');
             $table->decimal('price_buy', 12, 2)->default(0);
             $table->decimal('price_sell', 12, 2)->default(0);

@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const paidInput = document.getElementById('paid-input');
     const changeInput = document.getElementById('change-input');
     const paymentSelect = document.querySelector('select[name="payment_method"]');
-    
+
     // Scanner elements (modal)
     const scanToggle = document.getElementById('scan-toggle');
     const scannerPreview = document.getElementById('scanner-preview');
@@ -19,14 +19,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const scanLine = document.getElementById('scan-line');
     const modalBarcodeInput = document.getElementById('modal-barcode-input');
     const modalAddForm = document.getElementById('modal-add-form');
-    
+
     // Inventory scanner elements
     const inventoryBarcodeInput = document.getElementById('inventory-barcode-input');
     const inventoryScanToggle = document.getElementById('inventory-scan-toggle');
     const inventoryManualInput = document.getElementById('inventory-manual-input');
     const inventoryScannerPreview = document.getElementById('inventory-scanner-preview');
     const inventoryScannerStatus = document.getElementById('inventory-scanner-status');
-    
+
+    const rupiahInputs = document.querySelectorAll('[data-rupiah]');
+    const stripNonDigits = (value) => (value ?? '').toString().replace(/\D+/g, '');
+    const formatRupiahNumber = (amount) => `Rp ${Number(amount || 0).toLocaleString('id-ID')}`;
+    const formatRupiahValue = (value) => {
+        const digits = stripNonDigits(value);
+        if (!digits) {
+            return '';
+        }
+        return formatRupiahNumber(digits);
+    };
+    const normalizeRupiahInput = (input) => {
+        input.value = formatRupiahValue(input.value);
+    };
+
     let scanner = null;
     let scanning = false;
     let inventoryScanner = null;
@@ -34,12 +48,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastScanAt = 0;
     let lastInventoryScanAt = 0;
     const scanBeep = new Audio('/audio/scanner-beep.mp3');
-    
+
     // Export scanner state untuk akses dari view
     window.posScanner = {
         get instance() { return scanner; },
         get isScanning() { return scanning; },
         set isScanning(value) { scanning = value; }
+    };
+    window.inventoryScanner = {
+        get instance() { return inventoryScanner; },
+        get isScanning() { return inventoryScanning; },
+        set isScanning(value) { inventoryScanning = value; }
     };
 
     const playBeep = () => {
@@ -89,9 +108,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         const total = Number(totalEl.dataset.total || 0);
-        const paid = Number(paidInput.value || 0);
+        const paid = Number(stripNonDigits(paidInput.value || 0));
         const change = paid > total ? paid - total : 0;
-        changeInput.value = `Rp ${change.toLocaleString('id-ID')}`;
+        changeInput.value = formatRupiahNumber(change);
     };
 
     if (paidInput) {
@@ -101,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (paymentSelect && paidInput) {
         paymentSelect.addEventListener('change', (event) => {
             if (event.target.value === 'kasbon') {
-                paidInput.value = 0;
+                paidInput.value = formatRupiahNumber(0);
                 paidInput.setAttribute('disabled', 'disabled');
                 updateChange();
             } else {
@@ -111,6 +130,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updateChange();
+
+    if (rupiahInputs.length > 0) {
+        rupiahInputs.forEach((input) => {
+            normalizeRupiahInput(input);
+            input.addEventListener('input', () => normalizeRupiahInput(input));
+        });
+
+        const forms = new Set();
+        rupiahInputs.forEach((input) => {
+            const form = input.closest('form');
+            if (form) {
+                forms.add(form);
+            }
+        });
+
+        forms.forEach((form) => {
+            form.addEventListener('submit', () => {
+                form.querySelectorAll('[data-rupiah]').forEach((input) => {
+                    input.value = stripNonDigits(input.value);
+                });
+            });
+        });
+    }
 
     // Modal barcode input handling
     if (modalBarcodeInput) {
@@ -192,15 +234,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Inventory Scanner
-    if (inventoryManualInput && inventoryBarcodeInput) {
-        inventoryManualInput.addEventListener('click', () => {
-            inventoryBarcodeInput.focus();
-        });
-    }
+    // Inventory Scanner (in modal)
+    const inventoryScanToggleModal = document.getElementById('inventory-scan-toggle-modal');
+    const inventoryScannerWrapper = document.getElementById('inventory-scanner-wrapper');
+    const inventoryScanLine = document.getElementById('inventory-scan-line');
+    const modalInventoryBarcodeInput = document.getElementById('modal-inventory-barcode-input');
+    const mainInventoryBarcodeInput = document.getElementById('inventory-barcode-input');
 
-    if (inventoryScanToggle && inventoryScannerPreview) {
-        inventoryScanToggle.addEventListener('click', async () => {
+    if (inventoryScanToggleModal && inventoryScannerPreview) {
+        inventoryScanToggleModal.addEventListener('click', async () => {
             if (!inventoryScanner) {
                 inventoryScanner = new Html5Qrcode(inventoryScannerPreview.id);
             }
@@ -208,7 +250,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!inventoryScanning) {
                 try {
                     inventoryScanning = true;
-                    inventoryScanToggle.textContent = 'Hentikan Scan';
+                    if (window.inventoryScanner) window.inventoryScanner.isScanning = true;
+                    inventoryScanToggleModal.textContent = 'Hentikan Scan';
+                    if (inventoryScannerWrapper) inventoryScannerWrapper.classList.add('scanning-active');
+                    if (inventoryScanLine) inventoryScanLine.classList.add('scanning');
                     if (inventoryScannerStatus) {
                         inventoryScannerStatus.textContent = 'Status: memulai kamera...';
                     }
@@ -224,19 +269,29 @@ document.addEventListener('DOMContentLoaded', () => {
                                 return;
                             }
                             lastInventoryScanAt = now;
-                            if (inventoryBarcodeInput) {
-                                inventoryBarcodeInput.value = decodedText;
-                                inventoryBarcodeInput.focus();
+                            if (modalInventoryBarcodeInput) {
+                                modalInventoryBarcodeInput.value = decodedText;
+                            }
+                            if (mainInventoryBarcodeInput) {
+                                mainInventoryBarcodeInput.value = decodedText;
                             }
                             if (inventoryScannerStatus) {
                                 inventoryScannerStatus.textContent = `Status: terbaca ${decodedText}`;
                             }
                             playBeep();
+                            // Auto close modal after successful scan
+                            setTimeout(() => {
+                                const closeBtn = document.getElementById('close-inventory-scan-modal');
+                                if (closeBtn) closeBtn.click();
+                            }, 500);
                         }
                     );
                 } catch (error) {
                     inventoryScanning = false;
-                    inventoryScanToggle.textContent = 'Mulai Scan Kamera';
+                    if (window.inventoryScanner) window.inventoryScanner.isScanning = false;
+                    inventoryScanToggleModal.textContent = 'Mulai Scan Kamera';
+                    if (inventoryScannerWrapper) inventoryScannerWrapper.classList.remove('scanning-active');
+                    if (inventoryScanLine) inventoryScanLine.classList.remove('scanning');
                     if (inventoryScannerStatus) {
                         inventoryScannerStatus.textContent = 'Status: gagal membuka kamera.';
                     }
@@ -246,7 +301,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     await inventoryScanner.stop();
                 } finally {
                     inventoryScanning = false;
-                    inventoryScanToggle.textContent = 'Mulai Scan Kamera';
+                    if (window.inventoryScanner) window.inventoryScanner.isScanning = false;
+                    inventoryScanToggleModal.textContent = 'Mulai Scan Kamera';
+                    if (inventoryScannerWrapper) inventoryScannerWrapper.classList.remove('scanning-active');
+                    if (inventoryScanLine) inventoryScanLine.classList.remove('scanning');
                     if (inventoryScannerStatus) {
                         inventoryScannerStatus.textContent = 'Status: berhenti.';
                     }

@@ -13,6 +13,13 @@ use Illuminate\View\View;
 
 class PosController extends Controller
 {
+    private function normalizeCurrency(?string $value): ?string
+    {
+        $digits = preg_replace('/\D+/', '', $value ?? '');
+
+        return $digits === '' ? null : $digits;
+    }
+
     public function index(): View
     {
         $cart = session('pos_cart', []);
@@ -32,10 +39,22 @@ class PosController extends Controller
     public function addItem(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'barcode' => 'required|string',
+            'barcode' => 'nullable|string',
+            'product_id' => 'nullable|integer|exists:products,id',
         ]);
 
-        $product = Product::where('barcode', $data['barcode'])->first();
+        $product = null;
+        
+        // Cari produk berdasarkan barcode jika ada
+        if (!empty($data['barcode'])) {
+            $product = Product::where('barcode', $data['barcode'])->first();
+        }
+        
+        // Jika tidak ditemukan barcode atau barcode kosong, cari berdasarkan product_id
+        if (!$product && !empty($data['product_id'])) {
+            $product = Product::find($data['product_id']);
+        }
+        
         if (!$product) {
             return back()->withErrors([
                 'barcode' => 'Produk tidak ditemukan.',
@@ -88,6 +107,10 @@ class PosController extends Controller
                 'checkout' => 'Keranjang masih kosong.',
             ]);
         }
+
+        $request->merge([
+            'paid' => $this->normalizeCurrency($request->input('paid')),
+        ]);
 
         $data = $request->validate([
             'payment_method' => 'required|string',
