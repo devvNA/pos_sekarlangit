@@ -2,7 +2,7 @@
 
 @section('content')
     <!-- Stats Cards -->
-    <section class="grid gap-4 lg:grid-cols-3">
+    <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <div class="rounded-xl border border-black/10 bg-[#fdf8ef] p-3">
             <p class="text-xs font-semibold text-black/70">Penjualan Hari Ini</p>
             <p class="mt-2 text-xl font-bold text-emerald-700">Rp {{ number_format($dailySales, 0, ',', '.') }}</p>
@@ -37,7 +37,7 @@
     </section>
 
     <!-- Content Sections -->
-    <section class="mt-4 grid gap-4 lg:grid-cols-2">
+    <section class="mt-4 grid gap-4 md:grid-cols-2">
         <div class="rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
             <h2 class="text-base font-bold">Ringkasan Cepat</h2>
             <div class="mt-4 space-y-3 text-sm">

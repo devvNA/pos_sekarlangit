@@ -32,8 +32,8 @@
             <button class="btn-primary" type="button" onclick="openCreateModal()">Tambah Piutang</button>
         </div>
 
-        <div class="mt-4 overflow-hidden rounded-xl border border-black/10">
-            <table class="w-full text-left text-xs">
+        <div class="mt-4 overflow-x-auto rounded-xl border border-black/10">
+            <table class="w-full min-w-[700px] text-left text-xs">
                 <thead class="background-color: #1e3a5f; tracking-wide text-black/60">
                     <tr>
                         <th class="px-4 py-3">Pelanggan</th>
@@ -260,8 +260,8 @@
 
             <!-- Detail Section -->
             <div class="rounded-xl bg-gradient-to-br from-blue-50 to-blue-100/50 p-4 border border-blue-200">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="pb-3 border-b border-blue-200">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div class="pb-3 border-b border-blue-200 sm:border-b-0">
                         <p class="text-xs text-blue-600 font-semibold uppercase tracking-wide">Pelanggan</p>
                         <p class="font-bold text-base mt-1" id="payment_customer_name">-</p>
                     </div>
@@ -269,11 +269,11 @@
                         <p class="text-xs text-blue-600 font-semibold uppercase tracking-wide">Total Piutang</p>
                         <p class="font-bold text-base mt-1" id="payment_total">-</p>
                     </div>
-                    <div class="pt-3">
+                    <div class="pt-3 sm:pt-0">
                         <p class="text-xs text-blue-600 font-semibold uppercase tracking-wide">Sisa Piutang</p>
                         <p class="font-bold text-base text-red-600 mt-1" id="payment_remaining">-</p>
                     </div>
-                    <div class="pt-3">
+                    <div class="pt-3 sm:pt-0">
                         <p class="text-xs text-blue-600 font-semibold uppercase tracking-wide">Status</p>
                         <p class="mt-1" id="payment_status">-</p>
                     </div>

@@ -29,7 +29,7 @@
                 <h2 class="text-lg font-bold">Buku Kas</h2>
                 <p class="text-sm text-black/60">Pencatatan pemasukan & pengeluaran.</p>
             </div>
-            <div class="flex gap-2">
+            <div class="flex flex-col gap-2 sm:flex-row sm:gap-2">
                 <button class="btn-secondary bg-red-500 hover:bg-amber-600 text-white border-amber-600" type="button"
                     onclick="openCreateModal('out')">Tambah Pengeluaran</button>
                 <button class="btn-primary" type="button" onclick="openCreateModal('in')">Tambah Pemasukan</button>
@@ -56,8 +56,8 @@
             </div>
         @endif
 
-        <div class="mt-4 overflow-hidden rounded-xl border border-black/10">
-            <table class="w-full text-left text-xs">
+        <div class="mt-4 overflow-x-auto rounded-xl border border-black/10">
+            <table class="w-full min-w-[600px] text-left text-xs">
                 <thead class="background-color: #1e3a5f; tracking-wide text-black/60">
                     <tr>
                         <th class="px-4 py-3">Tanggal</th>

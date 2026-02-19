@@ -32,8 +32,8 @@
             <button class="btn-primary" type="button" onclick="openCreateModal()">Tambah Pemasok</button>
         </div>
 
-        <div class="mt-4 overflow-hidden rounded-xl border border-black/10">
-            <table class="w-full text-left text-xs">
+        <div class="mt-4 overflow-x-auto rounded-xl border border-black/10">
+            <table class="w-full min-w-[500px] text-left text-xs">
                 <thead class="background-color: #1e3a5f; tracking-wide text-black/60">
                     <tr>
                         <th class="px-4 py-3">Nama</th>

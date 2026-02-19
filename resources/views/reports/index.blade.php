@@ -7,12 +7,12 @@
                 <h2 class="text-lg font-bold">Laporan</h2>
                 <p class="text-sm text-black/60">Laporan harian, bulanan, stok, dan laba rugi.</p>
             </div>
-            <div class="flex flex-wrap items-end gap-2">
-                <a class="rounded-lg border border-amber-500 bg-white text-amber-600 text-sm font-semibold px-4 py-2 hover:bg-amber-50 transition-colors"
+            <div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-end">
+                <a class="rounded-lg border border-amber-500 bg-white text-amber-600 text-sm font-semibold px-4 py-2 hover:bg-amber-50 transition-colors text-center"
                     target="_blank"
                     href="{{ route('reports.export', ['start_date' => $rangeStart->format('Y-m-d'), 'end_date' => $rangeEnd->format('Y-m-d')]) }}">Export
                     CSV</a>
-                <form class="flex flex-wrap gap-2 items-end" method="get" action="{{ route('reports.index') }}">
+                <form class="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-end" method="get" action="{{ route('reports.index') }}">
                     <div>
                         <label class="block text-xs font-semibold text-black/60 mb-1" for="start_date">Dari Tanggal</label>
                         <input class="rounded-lg border border-black/20 bg-white px-3 py-2 text-sm" name="start_date"
@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <div class="mt-4 grid gap-4 lg:grid-cols-3">
+        <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div class="rounded-xl border border-black/10 bg-[#fdf8ef] p-3">
                 <p class="text-xs font-semibold">Penjualan Hari Ini</p>
                 <p class="mt-2 text-xl font-bold">Rp {{ number_format($dailySales, 0, ',', '.') }}</p>
@@ -49,22 +49,22 @@
             </div>
         </div>
 
-        <div class="mt-4 grid gap-4 lg:grid-cols-2">
+        <div class="mt-4 grid gap-4 md:grid-cols-2">
             <div class="rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
                 <h3 class="text-base font-bold">Tren 14 Hari Terakhir</h3>
-                <div class="mt-4 h-60">
+                <div class="mt-4 h-48 sm:h-60">
                     <canvas id="daily-trend"></canvas>
                 </div>
             </div>
             <div class="rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
                 <h3 class="text-base font-bold">Tren 6 Bulan Terakhir</h3>
-                <div class="mt-4 h-60">
+                <div class="mt-4 h-48 sm:h-60">
                     <canvas id="monthly-trend"></canvas>
                 </div>
             </div>
         </div>
 
-        <div class="mt-4 grid gap-4 lg:grid-cols-2">
+        <div class="mt-4 grid gap-4 md:grid-cols-2">
             <div class="rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
                 <h3 class="text-base font-bold">Pergerakan Stok (Rentang)</h3>
                 <div class="mt-4 grid gap-3 text-sm">
@@ -80,9 +80,9 @@
             </div>
             <div class="rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
                 <h3 class="text-base font-bold">Produk Stok Menipis</h3>
-                <div class="mt-4 overflow-hidden rounded-xl border border-black/10">
-                    <table class="w-full text-left text-xs">
-                        <thead class="background-color: #1e3a5f; text-xs uppercase tracking-wide text-black/60">
+                <div class="mt-4 overflow-x-auto rounded-xl border border-black/10">
+                    <table class="w-full min-w-[400px] text-left text-xs">
+                        <thead>
                             <tr>
                                 <th class="px-4 py-3">Produk</th>
                                 <th class="px-4 py-3">Stok</th>
@@ -109,8 +109,8 @@
 
         <div class="mt-4 rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
             <h3 class="text-base font-bold">Detail Penjualan per Item (Rentang)</h3>
-            <div class="mt-4 overflow-hidden rounded-xl border border-black/10">
-                <table class="w-full text-left text-xs">
+            <div class="mt-4 overflow-x-auto rounded-xl border border-black/10">
+                <table class="w-full min-w-[550px] text-left text-xs">
                     <thead class="background-color: #1e3a5f; tracking-wide text-black/60">
                         <tr>
                             <th class="px-4 py-3">Produk</th>
@@ -143,9 +143,9 @@
 
         <div class="mt-4 rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
             <h3 class="text-base font-bold">Detail Transaksi (50 Terbaru)</h3>
-            <div class="mt-4 overflow-hidden rounded-xl border border-black/10">
-                <table class="w-full text-left text-xs">
-                    <thead class="background-color: #1e3a5f; tracking-wide text-black/60">
+            <div class="mt-4 overflow-x-auto rounded-xl border border-black/10">
+                <table class="w-full min-w-[700px] text-left text-xs">
+                    <thead>
                         <tr>
                             <th class="px-4 py-3">No Struk</th>
                             <th class="px-4 py-3">Tanggal</th>

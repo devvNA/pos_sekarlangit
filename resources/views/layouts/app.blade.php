@@ -133,17 +133,17 @@
         <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden bg-black/50 md:hidden"></div>
 
         <div class="flex-1">
-            <header class="flex items-center justify-between border-b-4 px-4 py-4 shadow-md md:px-6"
+            <header class="flex items-center justify-between border-b-4 px-3 py-3 shadow-md sm:px-4 sm:py-4 md:px-6"
                 style="border-color: #1e3a5f; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);">
                 <button id="sidebar-toggle"
-                    class="rounded-lg border-2 px-3 py-2 text-base font-bold text-white md:hidden" type="button"
+                    class="shrink-0 rounded-lg border-2 px-3 py-2 text-sm font-bold text-white md:hidden" type="button"
                     style="background-color: #1b6b42; border-color: #1b6b42;">Menu</button>
-                <div class="text-lg font-semibold text-gray-900">Sistem POS untuk Toko Sekarlangit</div>
+                <div class="hidden text-lg font-semibold text-gray-900 md:block">Sistem POS untuk Toko Sekarlangit</div>
 
                 <!-- User Profile & Logout -->
                 @auth
-                    <div class="flex items-center gap-3">
-                        <div class="text-right">
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <div class="hidden text-right sm:block">
                             <p class="text-sm font-semibold text-gray-900">{{ Auth::user()->name }}</p>
                             <p class="text-xs text-gray-600">Admin</p>
                         </div>
@@ -159,7 +159,7 @@
                 @endauth
             </header>
 
-            <main class="px-4 py-6 md:px-6 md:py-8" style="background-color: #f9fafb;">
+            <main class="px-3 py-4 sm:px-4 sm:py-6 md:px-6 md:py-8" style="background-color: #f9fafb;">
                 <div class="w-full">
                     @yield('content')
                 </div>
