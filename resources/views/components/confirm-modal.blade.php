@@ -50,7 +50,7 @@ $iconSvg = $iconSvgs[$icon] ?? $iconSvgs['warning'];
     
     {{-- Modal Content --}}
     <div style="position: relative; height: 100%; display: flex; align-items: center; justify-content: center; padding: 1rem;">
-        <div id="{{ $id }}-panel" style="background: white; border-radius: 1rem; padding: 1.5rem; width: 100%; max-width: 400px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); transform: scale(0.95); opacity: 0; transition: all 0.2s;">
+        <div id="{{ $id }}-panel" style="background: white; border-radius: 1rem; padding: 1.5rem; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); transform: scale(0.95); opacity: 0; transition: all 0.2s;">
             
             {{-- Icon --}}
             <div style="display: flex; justify-content: center; margin-bottom: 1rem;">

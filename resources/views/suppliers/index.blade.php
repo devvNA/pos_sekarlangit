@@ -72,8 +72,8 @@
     </section>
 
     <!-- Modal Create -->
-    <div class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4" id="createModal">
-        <div class="w-full max-w-md rounded-2xl border border-black/10 bg-white p-5 shadow-xl">
+    <div class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-2 sm:p-4" id="createModal">
+        <div class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-4 sm:p-5 shadow-xl">
             <div class="flex items-center justify-between">
                 <h3 class="text-base font-bold">Tambah Pemasok</h3>
                 <button class="text-black/60 hover:text-black" onclick="closeCreateModal()">&times;</button>
@@ -115,8 +115,8 @@
     </div>
 
     <!-- Modal Edit -->
-    <div class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4" id="editModal">
-        <div class="w-full max-w-md rounded-2xl border border-black/10 bg-white p-5 shadow-xl">
+    <div class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-2 sm:p-4" id="editModal">
+        <div class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-4 sm:p-5 shadow-xl">
             <div class="flex items-center justify-between">
                 <h3 class="text-base font-bold">Edit Pemasok</h3>
                 <button class="text-black/60 hover:text-black" onclick="closeEditModal()">&times;</button>

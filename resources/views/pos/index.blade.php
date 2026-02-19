@@ -154,8 +154,8 @@
     </div>
 
     {{-- Modal Scan Barcode --}}
-    <div id="scan-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
-        <div class="w-full max-w-md rounded-2xl border border-black/10 bg-white p-6 shadow-xl">
+    <div id="scan-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-2 sm:p-4">
+        <div class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-4 sm:p-6 shadow-xl">
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-bold">Scan Barcode</h3>
                 <button id="close-scan-modal" type="button" class="rounded-full p-1 text-gray-500 hover:bg-gray-100">
@@ -170,7 +170,7 @@
                 <p class="text-sm text-black/60">Arahkan barcode ke kamera untuk scan otomatis.</p>
 
                 {{-- Area Kamera --}}
-                <div class="mt-4 rounded-lg border border-dashed border-black/30 bg-white/70 p-4">
+                <div class="mt-4 rounded-lg border border-dashed border-black/30 bg-white/70 p-2 sm:p-4">
                     <div id="scanner-wrapper"
                         class="scanner-wrapper relative mt-2 overflow-hidden rounded-md border border-black/10">
                         <div id="scanner-preview"
@@ -214,8 +214,8 @@
     </div>
 
     {{-- Modal Input Quantity --}}
-    <div id="quantity-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
-        <div class="w-full max-w-md rounded-2xl border border-black/10 bg-white p-6 shadow-xl">
+    <div id="quantity-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-2 sm:p-4">
+        <div class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-4 sm:p-6 shadow-xl">
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-bold">Tambah ke Keranjang</h3>
                 <button id="close-quantity-modal" type="button"
