@@ -58,12 +58,12 @@
             </form>
 
             <!-- Footer Info -->
-            <div class="mt-8 pt-6 border-t border-gray-200">
+            {{-- <div class="mt-8 pt-6 border-t border-gray-200">
                 <p class="text-center text-xs text-gray-600">
                     Akun Admin Default:<br>
                     <span class="font-mono text-gray-700">admin@sekarlangit.com / admin123</span>
                 </p>
-            </div>
+            </div> --}}
         </div>
     </div>
 </body>
