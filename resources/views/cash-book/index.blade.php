@@ -23,7 +23,7 @@
         </div>
     @endif
 
-    <section class="rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
+    <section class="overflow-hidden rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
         <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
                 <h2 class="text-lg font-bold">Buku Kas</h2>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <section class="rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
+    <section class="overflow-hidden rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
         <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
                 <h2 class="text-lg font-bold">Laporan</h2>
@@ -50,13 +50,13 @@
         </div>
 
         <div class="mt-4 grid gap-4 md:grid-cols-2">
-            <div class="rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
+            <div class="min-w-0 overflow-hidden rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
                 <h3 class="text-base font-bold">Tren 14 Hari Terakhir</h3>
                 <div class="mt-4 h-48 sm:h-60">
                     <canvas id="daily-trend"></canvas>
                 </div>
             </div>
-            <div class="rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
+            <div class="min-w-0 overflow-hidden rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
                 <h3 class="text-base font-bold">Tren 6 Bulan Terakhir</h3>
                 <div class="mt-4 h-48 sm:h-60">
                     <canvas id="monthly-trend"></canvas>
@@ -65,7 +65,7 @@
         </div>
 
         <div class="mt-4 grid gap-4 md:grid-cols-2">
-            <div class="rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
+            <div class="min-w-0 rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
                 <h3 class="text-base font-bold">Pergerakan Stok (Rentang)</h3>
                 <div class="mt-4 grid gap-3 text-sm">
                     <div class="flex items-center justify-between">
@@ -78,7 +78,7 @@
                     </div>
                 </div>
             </div>
-            <div class="rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
+            <div class="min-w-0 overflow-hidden rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
                 <h3 class="text-base font-bold">Produk Stok Menipis</h3>
                 <div class="mt-4 overflow-x-auto rounded-xl border border-black/10">
                     <table class="w-full min-w-[400px] text-left text-xs">
@@ -107,7 +107,7 @@
             </div>
         </div>
 
-        <div class="mt-4 rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
+        <div class="mt-4 overflow-hidden rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
             <h3 class="text-base font-bold">Detail Penjualan per Item (Rentang)</h3>
             <div class="mt-4 overflow-x-auto rounded-xl border border-black/10">
                 <table class="w-full min-w-[550px] text-left text-xs">
@@ -141,7 +141,7 @@
             </div>
         </div>
 
-        <div class="mt-4 rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
+        <div class="mt-4 overflow-hidden rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
             <h3 class="text-base font-bold">Detail Transaksi (50 Terbaru)</h3>
             <div class="mt-4 overflow-x-auto rounded-xl border border-black/10">
                 <table class="w-full min-w-[700px] text-left text-xs">

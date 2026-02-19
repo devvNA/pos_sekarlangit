@@ -13,7 +13,7 @@
     @enderror
 
     <div class="grid gap-4 lg:gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <section class="rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
+        <section class="min-w-0 rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
             <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <div>
                     <h2 class="text-xl font-bold">Kasir Cepat</h2>
@@ -105,7 +105,7 @@
             </div>
         </section>
 
-        <aside class="rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
+        <aside class="min-w-0 rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
             <h3 class="text-lg font-bold">Ringkasan Pembayaran</h3>
             <form id="checkout-form" class="mt-4 space-y-3 text-sm" method="post" action="{{ route('pos.checkout') }}">
                 @csrf

@@ -132,7 +132,7 @@
 
         <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden bg-black/50 md:hidden"></div>
 
-        <div class="flex-1">
+        <div class="flex-1 overflow-x-hidden">
             <header class="flex items-center justify-between border-b-4 px-3 py-3 shadow-md sm:px-4 sm:py-4 md:px-6"
                 style="border-color: #1e3a5f; background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);">
                 <button id="sidebar-toggle"
