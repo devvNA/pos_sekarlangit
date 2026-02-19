@@ -8,14 +8,14 @@
 
 ### Tech Stack
 
-| Komponen | Versi |
-|----------|-------|
-| PHP | ^8.2 |
-| Laravel | ^12.0 |
-| Tailwind CSS | ^4.0 |
-| Vite | ^7.0 |
-| Database | SQLite (default) |
-| Package JS | html5-qrcode (barcode scanner) |
+| Komponen     | Versi                          |
+| ------------ | ------------------------------ |
+| PHP          | ^8.2                           |
+| Laravel      | ^12.0                          |
+| Tailwind CSS | ^4.0                           |
+| Vite         | ^7.0                           |
+| Database     | SQLite (default)               |
+| Package JS   | html5-qrcode (barcode scanner) |
 
 ## Struktur Project
 
@@ -23,7 +23,7 @@
 pos-sekarlangit/
 ├── app/
 │   ├── Http/Controllers/     # Controller utama aplikasi
-│   │   ├── CashLedgerController.php    # Manajemen kas harian
+│   │   ├── CashBookController.php    # Manajemen kas harian
 │   │   ├── DashboardController.php     # Dashboard utama
 │   │   ├── InventoryController.php     # Manajemen stok/produk
 │   │   ├── PosController.php           # Transaksi POS
@@ -31,7 +31,7 @@ pos-sekarlangit/
 │   │   ├── ReportController.php        # Laporan penjualan
 │   │   └── SupplierController.php      # Manajemen pemasok
 │   └── Models/               # Eloquent Models
-│       ├── CashLedgerEntry.php
+│       ├── CashBookEntry.php
 │       ├── Customer.php
 │       ├── Product.php
 │       ├── Receivable.php
@@ -60,49 +60,49 @@ pos-sekarlangit/
 ### Core Entities
 
 1. **Product** - Produk yang dijual
-   - `supplier_id`, `name`, `barcode`, `unit`
-   - `price_buy` (harga beli), `price_sell` (harga jual)
-   - `stock`, `min_stock` (stok minimum), `active`
+    - `supplier_id`, `name`, `barcode`, `unit`
+    - `price_buy` (harga beli), `price_sell` (harga jual)
+    - `stock`, `min_stock` (stok minimum), `active`
 
 2. **Sale** - Transaksi penjualan
-   - `customer_id`, `receipt_no` (nomor struk), `sold_at`
-   - `payment_method`, `total`, `paid`, `change`, `note`
+    - `customer_id`, `receipt_no` (nomor struk), `sold_at`
+    - `payment_method`, `total`, `paid`, `change`, `note`
 
 3. **SaleItem** - Item dalam transaksi
-   - Relasi ke `Sale` dan `Product`
-   - `quantity`, `price_buy`, `price_sell`
+    - Relasi ke `Sale` dan `Product`
+    - `quantity`, `price_buy`, `price_sell`
 
 4. **Supplier** - Pemasok barang
-   - `name`, `phone`, `address`
+    - `name`, `phone`, `address`
 
 5. **StockIn** / **StockInItem** - Pencatatan barang masuk
 
 6. **Receivable** / **ReceivablePayment** - Piutang & pembayaran
 
-7. **CashLedgerEntry** - Pencatatan kas masuk/keluar
+7. **CashBookEntry** - Pencatatan kas masuk/keluar
 
 ## Routes
 
-| URL | Method | Controller | Name | Keterangan |
-|-----|--------|------------|------|------------|
-| `/` | GET | DashboardController@index | dashboard | Halaman utama |
-| `/pos` | GET | PosController@index | pos.index | Halaman POS |
-| `/pos/items` | POST | PosController@addItem | pos.items.add | Tambah item ke keranjang |
-| `/pos/items/{id}` | DELETE | PosController@removeItem | pos.items.remove | Hapus item |
-| `/pos/clear` | DELETE | PosController@clearCart | pos.clear | Kosongkan keranjang |
-| `/pos/checkout` | POST | PosController@checkout | pos.checkout | Proses pembayaran |
-| `/pos/receipt/{sale}` | GET | PosController@receipt | pos.receipt | Cetak struk |
-| `/inventori` | GET | InventoryController@index | inventory.index | Daftar produk |
-| `/inventori/tambah` | GET | InventoryController@create | inventory.create | Form tambah produk |
-| `/inventori` | POST | InventoryController@store | inventory.store | Simpan produk |
-| `/inventori/{product}/edit` | GET | InventoryController@edit | inventory.edit | Form edit |
-| `/inventori/{product}` | PUT | InventoryController@update | inventory.update | Update produk |
-| `/inventori/{product}` | DELETE | InventoryController@destroy | inventory.destroy | Hapus produk |
-| `/pemasok` | GET | SupplierController@index | suppliers.index | Daftar pemasok |
-| `/piutang` | GET | ReceivableController@index | receivables.index | Daftar piutang |
-| `/kas` | GET | CashLedgerController@index | cash.index | Buku kas |
-| `/laporan` | GET | ReportController@index | reports.index | Laporan |
-| `/laporan/export` | GET | ReportController@export | reports.export | Export laporan |
+| URL                         | Method | Controller                  | Name              | Keterangan               |
+| --------------------------- | ------ | --------------------------- | ----------------- | ------------------------ |
+| `/`                         | GET    | DashboardController@index   | dashboard         | Halaman utama            |
+| `/pos`                      | GET    | PosController@index         | pos.index         | Halaman POS              |
+| `/pos/items`                | POST   | PosController@addItem       | pos.items.add     | Tambah item ke keranjang |
+| `/pos/items/{id}`           | DELETE | PosController@removeItem    | pos.items.remove  | Hapus item               |
+| `/pos/clear`                | DELETE | PosController@clearCart     | pos.clear         | Kosongkan keranjang      |
+| `/pos/checkout`             | POST   | PosController@checkout      | pos.checkout      | Proses pembayaran        |
+| `/pos/receipt/{sale}`       | GET    | PosController@receipt       | pos.receipt       | Cetak struk              |
+| `/inventori`                | GET    | InventoryController@index   | inventory.index   | Daftar produk            |
+| `/inventori/tambah`         | GET    | InventoryController@create  | inventory.create  | Form tambah produk       |
+| `/inventori`                | POST   | InventoryController@store   | inventory.store   | Simpan produk            |
+| `/inventori/{product}/edit` | GET    | InventoryController@edit    | inventory.edit    | Form edit                |
+| `/inventori/{product}`      | PUT    | InventoryController@update  | inventory.update  | Update produk            |
+| `/inventori/{product}`      | DELETE | InventoryController@destroy | inventory.destroy | Hapus produk             |
+| `/pemasok`                  | GET    | SupplierController@index    | suppliers.index   | Daftar pemasok           |
+| `/piutang`                  | GET    | ReceivableController@index  | receivables.index | Daftar piutang           |
+| `/kas`                      | GET    | CashBookController@index    | cash.index        | Buku kas                 |
+| `/laporan`                  | GET    | ReportController@index      | reports.index     | Laporan                  |
+| `/laporan/export`           | GET    | ReportController@export     | reports.export    | Export laporan           |
 
 ## Coding Standards
 
@@ -126,9 +126,9 @@ public function store(Request $request): RedirectResponse
         'name' => 'required|string|max:255',
         'price_sell' => 'required|numeric|min:0',
     ]);
-    
+
     Product::create($validated);
-    
+
     return redirect()->route('inventory.index')
         ->with('success', 'Produk berhasil ditambahkan');
 }
@@ -214,25 +214,30 @@ php artisan db:seed        # Run seeders
 ## Fitur Kunci yang Perlu Diperhatikan
 
 ### 1. POS (Point of Sale)
+
 - Barcode scanner menggunakan `html5-qrcode`
 - Cart/session management
 - Perhitungan otomatis: total, kembalian
 - Cetak struk (`receipt.blade.php`)
 
 ### 2. Inventory Management
+
 - Stok minimum warning
 - Pencatatan barang masuk (StockIn)
 - Harga beli vs harga jual
 
 ### 3. Piutang (Receivables)
+
 - Pencatatan pembayaran kredit
 - History pembayaran per customer
 
 ### 4. Buku Kas (Cash Ledger)
+
 - Pencatatan pemasukan/pengeluaran
 - Balance harian
 
 ### 5. Laporan
+
 - Export data (Excel/PDF)
 - Filter per periode
 
@@ -241,6 +246,61 @@ php artisan db:seed        # Run seeders
 - Default menggunakan **SQLite** (`DB_CONNECTION=sqlite`)
 - File database: `database/database.sqlite`
 - Jalankan `php artisan migrate` untuk membuat tabel
+
+## Components
+
+### Confirm Modal (`<x-confirm-modal>`)
+
+Komponen modal konfirmasi reusable untuk konfirmasi delete dan aksi lainnya.
+
+**Props:**
+| Prop | Default | Keterangan |
+|------|---------|------------|
+| `id` | `confirm-modal` | ID unik untuk modal |
+| `title` | `Konfirmasi` | Judul modal |
+| `message` | `Apakah Anda yakin?` | Pesan konfirmasi |
+| `confirmText` | `Ya, Lanjutkan` | Text tombol confirm |
+| `cancelText` | `Batal` | Text tombol batal |
+| `confirmType` | `danger` | Warna tombol: `danger`, `warning`, `primary`, `success` |
+| `icon` | `warning` | Icon: `warning`, `danger`, `info`, `question`, `success` |
+
+**Cara Penggunaan:**
+
+```blade
+{{-- Definisikan modal --}}
+<x-confirm-modal
+    id="delete-modal"
+    title="Hapus Produk"
+    message="Apakah Anda yakin ingin menghapus produk ini?"
+    confirm-text="Ya, Hapus"
+    cancel-text="Batal"
+    confirm-type="danger"
+    icon="warning"
+/>
+
+{{-- Panggil via JavaScript --}}
+<button onclick="confirmDelete(1, 'Produk ABC')">Hapus</button>
+
+<script>
+function confirmDelete(id, name) {
+    deleteModalShow({
+        message: `Hapus "${name}"?`,
+        formAction: `/inventori/${id}`,
+        formMethod: 'DELETE'
+    });
+}
+</script>
+```
+
+**JavaScript Options:**
+
+- `message` - Pesan custom (bisa HTML)
+- `formAction` - URL form submit
+- `formMethod` - HTTP method (POST, DELETE, PUT)
+- `onConfirm()` - Callback function saat confirm
+- `onCancel()` - Callback function saat cancel
+
+**Note:** ID dengan hyphen (misal `delete-modal`) akan dikonversi ke camelCase untuk nama fungsi (`deleteModalShow`).
 
 ## Catatan Penting
 

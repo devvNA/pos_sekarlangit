@@ -7,8 +7,29 @@
                 <h2 class="text-xl font-bold">Tambah Produk</h2>
                 <p class="text-sm text-black/60">Isi data produk baru.</p>
             </div>
-            <a class="btn-secondary" href="{{ route('inventory.index') }}">Kembali</a>
+            <div class="flex gap-2">
+                <a class="btn-secondary" href="{{ route('inventory.index') }}">Kembali</a>
+                @if(request()->has('from_pos'))
+                    <a class="btn-primary" href="{{ route('pos.index') }}">Kembali ke POS</a>
+                @endif
+            </div>
         </div>
+
+        @if(request()->has('name'))
+            <div class="mt-4 rounded-xl border-2 border-blue-300 bg-blue-50 px-4 py-3 text-sm">
+                <div class="flex items-start gap-3">
+                    <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-blue-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold text-blue-900">Produk dari pencarian POS</p>
+                        <p class="mt-1 text-blue-700">Nama produk "<strong>{{ request('name') }}</strong>" telah diisi otomatis. Silakan lengkapi data lainnya.</p>
+                    </div>
+                </div>
+            </div>
+        @endif
 
         @if ($errors->any())
             <div class="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -21,12 +42,12 @@
             </div>
         @endif
 
-        <form class="mt-4 grid gap-4 md:grid-cols-2" method="post" action="{{ route('inventory.store') }}">
+        <form class="mt-4 grid gap-4 md:grid-cols-2" method="post" action="{{ route('inventory.store') }}{{ request()->has('from_pos') ? '?from_pos=1' : '' }}">
             @csrf
             <div>
                 <label class="mb-1 block text-xs font-semibold text-black/60">Nama Produk</label>
-                <input name="name" value="{{ old('name') }}"
-                    class="w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm" type="text" required />
+                <input name="name" value="{{ old('name', request('name')) }}"
+                    class="w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm" type="text" required autofocus />
                 @error('name')
                     <p class="mt-1 text-xs font-semibold text-red-600">{{ $message }}</p>
                 @enderror
@@ -93,18 +114,24 @@
             </div>
             <div>
                 <label class="mb-1 block text-xs font-semibold text-black/60">Harga Beli</label>
-                <input name="price_buy" value="{{ old('price_buy') }}"
-                    class="w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm" type="text"
-                    inputmode="numeric" data-rupiah autocomplete="off" required />
+                <div class="relative">
+                    <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">Rp</span>
+                    <input name="price_buy" value="{{ old('price_buy') }}"
+                        class="w-full rounded-lg border border-black/20 bg-white pl-9 pr-3 py-2 text-sm" type="text"
+                        inputmode="numeric" data-rupiah autocomplete="off" required />
+                </div>
                 @error('price_buy')
                     <p class="mt-1 text-xs font-semibold text-red-600">{{ $message }}</p>
                 @enderror
             </div>
             <div>
                 <label class="mb-1 block text-xs font-semibold text-black/60">Harga Jual</label>
-                <input name="price_sell" value="{{ old('price_sell') }}"
-                    class="w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm" type="text"
-                    inputmode="numeric" data-rupiah autocomplete="off" required />
+                <div class="relative">
+                    <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">Rp</span>
+                    <input name="price_sell" value="{{ old('price_sell') }}"
+                        class="w-full rounded-lg border border-black/20 bg-white pl-9 pr-3 py-2 text-sm" type="text"
+                        inputmode="numeric" data-rupiah autocomplete="off" required />
+                </div>
                 @error('price_sell')
                     <p class="mt-1 text-xs font-semibold text-red-600">{{ $message }}</p>
                 @enderror

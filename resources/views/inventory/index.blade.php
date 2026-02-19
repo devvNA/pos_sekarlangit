@@ -64,11 +64,7 @@
                             <td class="px-3 py-3">
                                 <div class="flex items-center justify-center gap-3">
                                     <a class="text-xs font-semibold text-blue-600 hover:underline" href="{{ route('inventory.edit', $product->id) }}">Edit</a>
-                                    <form class="inline" method="post" action="{{ route('inventory.destroy', $product->id) }}" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="text-xs font-semibold text-red-600 hover:underline" type="submit">Hapus</button>
-                                    </form>
+                                    <button type="button" class="text-xs font-semibold text-red-600 hover:underline" onclick="confirmDelete({{ $product->id }}, '{{ addslashes($product->name) }}')">Hapus</button>
                                 </div>
                             </td>
                         </tr>
@@ -84,4 +80,27 @@
             {{ $products->links() }}
         </div>
     </section>
+
+    {{-- Modal Konfirmasi Hapus --}}
+    <x-confirm-modal 
+        id="delete-modal"
+        title="Hapus Produk"
+        message="Apakah Anda yakin ingin menghapus produk ini? Tindakan ini tidak dapat dibatalkan."
+        confirm-text="Ya, Hapus"
+        cancel-text="Batal"
+        confirm-type="danger"
+        icon="warning"
+    />
 @endsection
+
+@push('scripts')
+<script>
+function confirmDelete(productId, productName) {
+    deleteModalShow({
+        message: `Apakah Anda yakin ingin menghapus produk "<strong>${productName}</strong>"? Tindakan ini tidak dapat dibatalkan.`,
+        formAction: `{{ url('inventori') }}/${productId}`,
+        formMethod: 'DELETE'
+    });
+}
+</script>
+@endpush

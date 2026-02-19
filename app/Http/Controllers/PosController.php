@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Product;
@@ -22,16 +21,16 @@ class PosController extends Controller
 
     public function index(): View
     {
-        $cart = session('pos_cart', []);
-        $total = collect($cart)->sum('subtotal');
+        $cart     = session('pos_cart', []);
+        $total    = collect($cart)->sum('subtotal');
         $products = Product::where('active', true)
-            ->select('id', 'name', 'barcode', 'price_sell', 'stock')
+            ->select('id', 'name', 'barcode', 'price_sell', 'stock', 'unit')
             ->orderBy('name')
             ->get();
 
         return view('pos.index', [
-            'cart' => $cart,
-            'total' => $total,
+            'cart'     => $cart,
+            'total'    => $total,
             'products' => $products,
         ]);
     }
@@ -39,42 +38,61 @@ class PosController extends Controller
     public function addItem(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'barcode' => 'nullable|string',
+            'barcode'    => 'nullable|string',
             'product_id' => 'nullable|integer|exists:products,id',
+            'qty'        => 'nullable|integer|min:1',
         ]);
 
         $product = null;
-        
+
         // Cari produk berdasarkan barcode jika ada
-        if (!empty($data['barcode'])) {
+        if (! empty($data['barcode'])) {
             $product = Product::where('barcode', $data['barcode'])->first();
         }
-        
+
         // Jika tidak ditemukan barcode atau barcode kosong, cari berdasarkan product_id
-        if (!$product && !empty($data['product_id'])) {
+        if (! $product && ! empty($data['product_id'])) {
             $product = Product::find($data['product_id']);
         }
-        
-        if (!$product) {
+
+        if (! $product) {
             return back()->withErrors([
                 'barcode' => 'Produk tidak ditemukan.',
             ])->withInput();
         }
 
-        $cart = session('pos_cart', []);
+        $qty = (int) ($data['qty'] ?? 1);
+
+        // Validasi stok
+        if ($qty > $product->stock) {
+            return back()->withErrors([
+                'barcode' => "Stok tidak mencukupi. Stok tersedia: {$product->stock}",
+            ])->withInput();
+        }
+
+        $cart      = session('pos_cart', []);
         $productId = $product->id;
-        $price = (float) $product->price_sell;
+        $price     = (float) $product->price_sell;
 
         if (isset($cart[$productId])) {
-            $cart[$productId]['qty'] += 1;
+            $newQty = $cart[$productId]['qty'] + $qty;
+
+            // Validasi total qty di cart tidak melebihi stok
+            if ($newQty > $product->stock) {
+                return back()->withErrors([
+                    'barcode' => "Stok tidak mencukupi. Di keranjang: {$cart[$productId]['qty']}, Stok tersedia: {$product->stock}",
+                ])->withInput();
+            }
+
+            $cart[$productId]['qty']      = $newQty;
             $cart[$productId]['subtotal'] = $cart[$productId]['qty'] * $cart[$productId]['price'];
         } else {
             $cart[$productId] = [
-                'id' => $productId,
-                'name' => $product->name,
-                'price' => $price,
-                'qty' => 1,
-                'subtotal' => $price,
+                'id'       => $productId,
+                'name'     => $product->name,
+                'price'    => $price,
+                'qty'      => $qty,
+                'subtotal' => $price * $qty,
             ];
         }
 
@@ -114,15 +132,15 @@ class PosController extends Controller
 
         $data = $request->validate([
             'payment_method' => 'required|string',
-            'paid' => 'nullable|numeric|min:0',
-            'customer_name' => 'nullable|string|max:255',
-            'note' => 'nullable|string|max:500',
+            'paid'           => 'nullable|numeric|min:0',
+            'customer_name'  => 'nullable|string|max:255',
+            'note'           => 'nullable|string|max:500',
         ]);
 
-        $total = collect($cart)->sum('subtotal');
-        $paid = (float) ($data['paid'] ?? 0);
-        $remaining = $total - $paid;
-        $paymentMethod = $data['payment_method'];
+        $total           = collect($cart)->sum('subtotal');
+        $paid            = (float) ($data['paid'] ?? 0);
+        $remaining       = $total - $paid;
+        $paymentMethod   = $data['payment_method'];
         $needsReceivable = $remaining > 0 || $paymentMethod === 'kasbon';
 
         if ($needsReceivable && empty($data['customer_name'])) {
@@ -131,34 +149,34 @@ class PosController extends Controller
             ])->withInput();
         }
 
-        $receiptNo = 'SL-'.now()->format('YmdHis').'-'.str_pad((string) random_int(0, 999), 3, '0', STR_PAD_LEFT);
-        $saleId = null;
+        $receiptNo = 'SL-' . now()->format('YmdHis') . '-' . str_pad((string) random_int(0, 999), 3, '0', STR_PAD_LEFT);
+        $saleId    = null;
 
         DB::transaction(function () use ($cart, $data, $total, $paid, $remaining, $paymentMethod, $needsReceivable, $receiptNo, &$saleId) {
             $sale = Sale::create([
-                'receipt_no' => $receiptNo,
-                'sold_at' => now(),
+                'receipt_no'     => $receiptNo,
+                'sold_at'        => now(),
                 'payment_method' => $paymentMethod,
-                'total' => $total,
-                'paid' => $paid,
-                'change' => $paid > $total ? $paid - $total : 0,
-                'note' => $data['note'] ?? null,
+                'total'          => $total,
+                'paid'           => $paid,
+                'change'         => $paid > $total ? $paid - $total : 0,
+                'note'           => $data['note'] ?? null,
             ]);
             $saleId = $sale->id;
 
             foreach ($cart as $item) {
                 $product = Product::find($item['id']);
-                if (!$product) {
+                if (! $product) {
                     continue;
                 }
 
                 SaleItem::create([
-                    'sale_id' => $sale->id,
+                    'sale_id'    => $sale->id,
                     'product_id' => $product->id,
-                    'qty' => $item['qty'],
-                    'price' => $item['price'],
-                    'cost' => $product->price_buy,
-                    'subtotal' => $item['subtotal'],
+                    'qty'        => $item['qty'],
+                    'price'      => $item['price'],
+                    'cost'       => $product->price_buy,
+                    'subtotal'   => $item['subtotal'],
                 ]);
 
                 $product->decrement('stock', $item['qty']);
@@ -166,11 +184,11 @@ class PosController extends Controller
 
             if ($needsReceivable) {
                 Receivable::create([
-                    'sale_id' => $sale->id,
+                    'sale_id'       => $sale->id,
                     'customer_name' => $data['customer_name'],
-                    'total' => $total,
-                    'remaining' => $remaining > 0 ? $remaining : $total,
-                    'status' => 'belum_lunas',
+                    'total'         => $total,
+                    'remaining'     => $remaining > 0 ? $remaining : $total,
+                    'status'        => 'belum_lunas',
                 ]);
             }
         });

@@ -67,7 +67,13 @@ class InventoryController extends Controller
 
         $data['active'] = (bool) ($data['active'] ?? false);
 
-        Product::create($data);
+        $product = Product::create($data);
+
+        // Redirect ke POS jika berasal dari POS
+        if ($request->query('from_pos')) {
+            return redirect()->route('pos.index')
+                ->with('success', "Produk \"{$product->name}\" berhasil ditambahkan. Silakan cari dan tambahkan ke keranjang.");
+        }
 
         return redirect()->route('inventory.index')->with('success', 'Produk berhasil ditambahkan.');
     }

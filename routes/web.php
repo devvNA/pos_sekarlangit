@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\CashLedgerController;
+use App\Http\Controllers\CashBookController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\PosController;
@@ -23,7 +23,17 @@ Route::get('/inventori/{product}/edit', [InventoryController::class, 'edit'])->n
 Route::put('/inventori/{product}', [InventoryController::class, 'update'])->name('inventory.update');
 Route::delete('/inventori/{product}', [InventoryController::class, 'destroy'])->name('inventory.destroy');
 Route::get('/pemasok', [SupplierController::class, 'index'])->name('suppliers.index');
+Route::post('/pemasok', [SupplierController::class, 'store'])->name('suppliers.store');
+Route::put('/pemasok/{supplier}', [SupplierController::class, 'update'])->name('suppliers.update');
+Route::delete('/pemasok/{supplier}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
 Route::get('/piutang', [ReceivableController::class, 'index'])->name('receivables.index');
-Route::get('/kas', [CashLedgerController::class, 'index'])->name('cash.index');
+Route::post('/piutang', [ReceivableController::class, 'store'])->name('receivables.store');
+Route::put('/piutang/{receivable}', [ReceivableController::class, 'update'])->name('receivables.update');
+Route::delete('/piutang/{receivable}', [ReceivableController::class, 'destroy'])->name('receivables.destroy');
+Route::post('/piutang/{receivable}/bayar', [ReceivableController::class, 'addPayment'])->name('receivables.addPayment');
+Route::get('/kas', [CashBookController::class, 'index'])->name('cash.index');
+Route::post('/kas', [CashBookController::class, 'store'])->name('cash.store');
+Route::put('/kas/{cashLedgerEntry}', [CashBookController::class, 'update'])->name('cash.update');
+Route::delete('/kas/{cashLedgerEntry}', [CashBookController::class, 'destroy'])->name('cash.destroy');
 Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
 Route::get('/laporan/export', [ReportController::class, 'export'])->name('reports.export');

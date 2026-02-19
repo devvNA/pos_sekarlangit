@@ -94,18 +94,24 @@
             </div>
             <div>
                 <label class="mb-1 block text-xs font-semibold text-black/60">Harga Beli</label>
-                <input name="price_buy" value="{{ old('price_buy', $product->price_buy) }}"
-                    class="w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm" type="text"
-                    inputmode="numeric" data-rupiah autocomplete="off" required />
+                <div class="relative">
+                    <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">Rp</span>
+                    <input name="price_buy" value="{{ old('price_buy', (int) $product->price_buy) }}"
+                        class="w-full rounded-lg border border-black/20 bg-white pl-9 pr-3 py-2 text-sm" type="text"
+                        inputmode="numeric" data-rupiah autocomplete="off" required />
+                </div>
                 @error('price_buy')
                     <p class="mt-1 text-xs font-semibold text-red-600">{{ $message }}</p>
                 @enderror
             </div>
             <div>
                 <label class="mb-1 block text-xs font-semibold text-black/60">Harga Jual</label>
-                <input name="price_sell" value="{{ old('price_sell', $product->price_sell) }}"
-                    class="w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm" type="text"
-                    inputmode="numeric" data-rupiah autocomplete="off" required />
+                <div class="relative">
+                    <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">Rp</span>
+                    <input name="price_sell" value="{{ old('price_sell', (int) $product->price_sell) }}"
+                        class="w-full rounded-lg border border-black/20 bg-white pl-9 pr-3 py-2 text-sm" type="text"
+                        inputmode="numeric" data-rupiah autocomplete="off" required />
+                </div>
                 @error('price_sell')
                     <p class="mt-1 text-xs font-semibold text-red-600">{{ $message }}</p>
                 @enderror

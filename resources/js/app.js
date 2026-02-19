@@ -28,17 +28,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const inventoryScannerStatus = document.getElementById('inventory-scanner-status');
 
     const rupiahInputs = document.querySelectorAll('[data-rupiah]');
+    // Hapus semua karakter non-digit
     const stripNonDigits = (value) => (value ?? '').toString().replace(/\D+/g, '');
-    const formatRupiahNumber = (amount) => `Rp ${Number(amount || 0).toLocaleString('id-ID')}`;
-    const formatRupiahValue = (value) => {
+    // Format angka dengan thousand separator (titik untuk ID)
+    const formatThousandSeparator = (value) => {
         const digits = stripNonDigits(value);
-        if (!digits) {
-            return '';
-        }
-        return formatRupiahNumber(digits);
+        if (!digits) return '';
+        return Number(digits).toLocaleString('id-ID');
     };
+    // Normalisasi input: hanya thousand separator, tanpa prefix Rp
     const normalizeRupiahInput = (input) => {
-        input.value = formatRupiahValue(input.value);
+        const originalValue = input.value;
+        // Hapus .00 di akhir jika ada (dari database decimal)
+        const cleanValue = originalValue.toString().replace(/\.00$/, '');
+        const newValue = formatThousandSeparator(cleanValue);
+        if (originalValue !== newValue) {
+            input.value = newValue;
+        }
     };
 
     let scanner = null;
@@ -110,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const total = Number(totalEl.dataset.total || 0);
         const paid = Number(stripNonDigits(paidInput.value || 0));
         const change = paid > total ? paid - total : 0;
-        changeInput.value = formatRupiahNumber(change);
+        changeInput.value = `Rp ${change.toLocaleString('id-ID')}`;
     };
 
     if (paidInput) {
@@ -120,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (paymentSelect && paidInput) {
         paymentSelect.addEventListener('change', (event) => {
             if (event.target.value === 'kasbon') {
-                paidInput.value = formatRupiahNumber(0);
+                paidInput.value = '0';
                 paidInput.setAttribute('disabled', 'disabled');
                 updateChange();
             } else {
@@ -148,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         forms.forEach((form) => {
             form.addEventListener('submit', () => {
                 form.querySelectorAll('[data-rupiah]').forEach((input) => {
+                    // Kirim hanya angka tanpa separator
                     input.value = stripNonDigits(input.value);
                 });
             });
