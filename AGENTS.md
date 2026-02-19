@@ -324,3 +324,182 @@ php artisan migrate:fresh --seed
 # Permission issues (Linux/Mac)
 chmod -R 775 storage bootstrap/cache
 ```
+
+## Deployment & Production
+
+### Production Setup (Laragon)
+
+**Quick Start:**
+
+```bash
+# First time setup
+setup-first-time.bat
+
+# Build production
+build-production.bat
+
+# Or via composer
+composer run production
+```
+
+**Manual Steps:**
+
+```bash
+# 1. Install dependencies (production)
+composer install --optimize-autoloader --no-dev
+npm ci
+
+# 2. Setup environment
+copy .env.production.example .env
+php artisan key:generate
+
+# 3. Setup database
+type nul > database\database.sqlite
+php artisan migrate --force
+
+# 4. Build assets
+npm run build
+
+# 5. Optimize
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+php artisan optimize
+```
+
+### Composer Scripts
+
+```bash
+composer run setup       # First-time setup (development)
+composer run dev         # Development server + watch
+composer run build       # Build assets + optimize
+composer run production  # Full production build
+composer run test        # Run tests
+```
+
+### Laragon Virtual Host
+
+**Auto Configuration:**
+
+- Folder: `C:\laragon\www\pos-sekarlangit`
+- URL: `http://pos-sekarlangit.test`
+- Laragon auto-detects and creates virtual host
+
+**Manual Host (if needed):**
+
+1. Laragon → Menu → Auto Virtual Hosts → Enabled
+2. Restart Laragon
+3. Access via browser: `http://pos-sekarlangit.test`
+
+### Daily Usage (End User)
+
+1. Start Laragon → "Start All"
+2. Open browser → `http://pos-sekarlangit.test`
+3. Application ready!
+
+**No need:**
+
+- ❌ `npm run dev`
+- ❌ `php artisan serve`
+- ❌ Terminal commands
+
+### File Structure Production
+
+```
+pos-sekarlangit/
+├── .env                        # Config (SECRET!)
+├── database/
+│   └── database.sqlite         # SQLite database (BACKUP THIS!)
+├── public/build/               # Compiled assets (npm run build)
+├── storage/
+│   ├── logs/                   # Application logs
+│   └── framework/cache/        # Cache files
+├── setup-first-time.bat        # First-time setup script
+├── build-production.bat        # Production build script
+├── DEPLOYMENT.md               # Full deployment guide
+└── README-USER.md              # User guide for operators
+```
+
+### Important Files
+
+| File                       | Purpose                 | Backup?            |
+| -------------------------- | ----------------------- | ------------------ |
+| `database/database.sqlite` | All transactions & data | ✅ YES!            |
+| `.env`                     | App configuration & key | ✅ YES!            |
+| `storage/logs/`            | Error logs              | ⚠️ Check regularly |
+| `public/build/`            | Compiled assets         | ❌ Can rebuild     |
+
+### Backup Strategy
+
+```bash
+# Daily backup (recommended)
+copy database\database.sqlite database\backup\db-%date:~-4,4%%date:~-10,2%%date:~-7,2%.sqlite
+
+# Manual backup
+copy database\database.sqlite database\backup\database-backup-2026-02-19.sqlite
+```
+
+### Update Workflow
+
+When code changes:
+
+```bash
+# Pull changes (if using Git)
+git pull
+
+# Run production build
+build-production.bat
+
+# Or manual
+composer install --optimize-autoloader --no-dev
+npm ci
+npm run build
+php artisan migrate --force
+php artisan optimize:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+### Security Checklist
+
+- ✅ `APP_ENV=production`
+- ✅ `APP_DEBUG=false`
+- ✅ `APP_KEY` generated
+- ✅ `.env` not in Git
+- ✅ Regular database backups
+- ✅ HTTPS (if deployed online)
+
+### Performance Optimization
+
+**Already Configured:**
+
+- ✅ Composer autoload optimized (`--optimize-autoloader`)
+- ✅ Config cached (`config:cache`)
+- ✅ Routes cached (`route:cache`)
+- ✅ Views compiled (`view:cache`)
+- ✅ Assets minified (Vite production build)
+- ✅ OPcache enabled (via Laragon PHP)
+
+### Monitoring
+
+```bash
+# Check application info
+php artisan about
+
+# View logs
+type storage\logs\laravel.log
+
+# Check database size
+dir database\database.sqlite
+
+# Clear old logs (if needed)
+del storage\logs\laravel-*.log
+```
+
+### Documentation Files
+
+- **DEPLOYMENT.md** - Complete deployment guide with troubleshooting
+- **README-USER.md** - Simple guide for end users/operators
+- **AGENTS.md** - This file (technical documentation)
+- **PRD.md** - Product Requirements Document
