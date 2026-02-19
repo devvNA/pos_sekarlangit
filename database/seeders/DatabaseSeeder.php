@@ -1,8 +1,10 @@
 <?php
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,10 +15,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory()->create([
-        //     'name' => 'Admin Toko',
-        //     'email' => 'admin@sekarlangit.local',
-        // ]);
+        // Create default admin user
+        User::firstOrCreate(
+            ['email' => 'admin@sekarlangit.com'],
+            [
+                'name'     => 'Admin Toko',
+                'password' => Hash::make('admin123'),
+            ]
+        );
 
         // $supplier = Supplier::create([
         //     'name' => 'Pemasok Utama',
