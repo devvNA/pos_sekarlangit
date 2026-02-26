@@ -373,3 +373,74 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 })();
+// ── Page Navigation Loading Indicator ──
+(function () {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    if (!loadingOverlay) return;
+
+    let loadingTimeout = null;
+
+    const showLoading = () => {
+        clearTimeout(loadingTimeout);
+        loadingOverlay.classList.add('show');
+    };
+
+    const hideLoading = () => {
+        clearTimeout(loadingTimeout);
+        loadingTimeout = setTimeout(() => {
+            loadingOverlay.classList.remove('show');
+        }, 300);
+    };
+
+    // Show loading when page is being unloaded
+    window.addEventListener('beforeunload', () => {
+        showLoading();
+    });
+
+    // Hide loading when page is fully loaded
+    if (document.readyState === 'complete') {
+        hideLoading();
+    } else {
+        window.addEventListener('load', hideLoading);
+    }
+
+    // Handle link clicks
+    document.addEventListener('click', (event) => {
+        // Traverse up to find anchor tag
+        const link = event.target.closest('a');
+        if (!link) return;
+
+        // Skip if link has data-no-loading attribute
+        if (link.hasAttribute('data-no-loading')) return;
+
+        // Skip external links
+        const href = link.getAttribute('href');
+        if (!href || href.startsWith('http') || href.startsWith('//')) return;
+
+        // Skip if target is blank
+        if (link.target === '_blank') return;
+
+        // Skip if prevented default
+        if (event.defaultPrevented) return;
+
+        // Show loading for navigation
+        showLoading();
+    }, true);
+
+    // Handle form submissions (especially for navigation like logout)
+    document.addEventListener('submit', (event) => {
+        const form = event.target;
+
+        // Skip if form has data-no-loading attribute
+        if (form.hasAttribute('data-no-loading')) return;
+
+        // Skip if form has data-no-navigate attribute
+        if (form.hasAttribute('data-no-navigate')) return;
+
+        // Show loading for form submission
+        showLoading();
+    }, true);
+
+    // Also hide loading after a timeout (in case page load fails)
+    window.addEventListener('pageshow', hideLoading);
+})();

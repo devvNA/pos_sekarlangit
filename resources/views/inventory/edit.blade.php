@@ -54,28 +54,21 @@
             </div>
             <div>
                 <label class="mb-1 block text-xs font-semibold text-black/60">Satuan</label>
-                <select name="unit" class="w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm" required>
+                <select name="unit" class="w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm"
+                    style="appearance: none; background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27none%27 viewBox=%270 0 20 20%27%3E%3Cpath stroke=%27%236b7280%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%271.5%27 d=%27m6 8 4 4 4-4%27/%3E%3C/svg%3E'); background-size: 1.5em 1.5em; background-position: right 0.5rem center; background-repeat: no-repeat; padding-right: 2.5rem;"
+                    required>
                     @php($selectedUnit = old('unit', $product->unit))
                     <option value="pcs" @selected($selectedUnit === 'pcs')>pcs</option>
                     <option value="pak" @selected($selectedUnit === 'pak')>pak</option>
                     <option value="box" @selected($selectedUnit === 'box')>box</option>
-                    <option value="dus" @selected($selectedUnit === 'dus')>dus</option>
                     <option value="lusin" @selected($selectedUnit === 'lusin')>lusin</option>
-                    <option value="kodi" @selected($selectedUnit === 'kodi')>kodi</option>
-                    <option value="ikat" @selected($selectedUnit === 'ikat')>ikat</option>
                     <option value="lembar" @selected($selectedUnit === 'lembar')>lembar</option>
-                    <option value="set" @selected($selectedUnit === 'set')>set</option>
-                    <option value="sachet" @selected($selectedUnit === 'sachet')>sachet</option>
                     <option value="botol" @selected($selectedUnit === 'botol')>botol</option>
                     <option value="kaleng" @selected($selectedUnit === 'kaleng')>kaleng</option>
-                    <option value="bungkus" @selected($selectedUnit === 'bungkus')>bungkus</option>
                     <option value="galon" @selected($selectedUnit === 'galon')>galon</option>
                     <option value="kg" @selected($selectedUnit === 'kg')>kg</option>
                     <option value="gram" @selected($selectedUnit === 'gram')>gram</option>
                     <option value="liter" @selected($selectedUnit === 'liter')>liter</option>
-                    <option value="ml" @selected($selectedUnit === 'ml')>ml</option>
-                    <option value="meter" @selected($selectedUnit === 'meter')>meter</option>
-                    <option value="roll" @selected($selectedUnit === 'roll')>roll</option>
                 </select>
                 @error('unit')
                     <p class="mt-1 text-xs font-semibold text-red-600">{{ $message }}</p>
@@ -83,7 +76,8 @@
             </div>
             <div>
                 <label class="mb-1 block text-xs font-semibold text-black/60">Pemasok (Opsional)</label>
-                <select name="supplier_id" class="w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm">
+                <select name="supplier_id" class="w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-sm"
+                    style="appearance: none; background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27none%27 viewBox=%270 0 20 20%27%3E%3Cpath stroke=%27%236b7280%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%271.5%27 d=%27m6 8 4 4 4-4%27/%3E%3C/svg%3E'); background-size: 1.5em 1.5em; background-position: right 0.5rem center; background-repeat: no-repeat; padding-right: 2.5rem;">
                     <option value="">Tanpa pemasok</option>
                     @foreach ($suppliers as $supplier)
                         <option value="{{ $supplier->id }}" @selected(old('supplier_id', $product->supplier_id) == $supplier->id)>{{ $supplier->name }}</option>
@@ -139,8 +133,7 @@
             </div>
             <div class="md:col-span-2">
                 <label class="inline-flex items-center gap-2 text-sm">
-                    <input name="active" value="1" class="h-4 w-4" type="checkbox"
-                        @checked(old('active') === null ? $product->active : (bool) old('active')) />
+                    <input name="active" value="1" class="h-4 w-4" type="checkbox" @checked(old('active') === null ? $product->active : (bool) old('active')) />
                     <span>Produk aktif</span>
                 </label>
             </div>
@@ -229,6 +222,18 @@
                 inventoryScanModal.classList.remove('hidden');
                 inventoryScanModal.classList.add('flex');
                 if (modalInventoryBarcodeInput) modalInventoryBarcodeInput.focus();
+
+                // Auto-start camera dengan polling untuk memastikan ready
+                const startCamera = () => {
+                    const scanToggleBtn = document.getElementById('inventory-scan-toggle-modal');
+                    if (scanToggleBtn && window.inventoryScanner) {
+                        scanToggleBtn.click();
+                    } else {
+                        // Retry jika button belum ready
+                        setTimeout(startCamera, 100);
+                    }
+                };
+                startCamera();
             });
         }
 
@@ -278,5 +283,25 @@
                 }
             });
         }
+
+        // Auto-clear stock inputs when focused if value is 0
+        const stockInput = document.querySelector('input[name="stock"]');
+        const minStockInput = document.querySelector('input[name="min_stock"]');
+
+        [stockInput, minStockInput].forEach(input => {
+            if (input) {
+                input.addEventListener('focus', function() {
+                    if (this.value === '0') {
+                        this.value = '';
+                    }
+                });
+
+                input.addEventListener('blur', function() {
+                    if (this.value === '' || this.value === null) {
+                        this.value = '0';
+                    }
+                });
+            }
+        });
     </script>
 @endpush

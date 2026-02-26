@@ -167,6 +167,10 @@
                 </main>
             </div>
         </div>
+
+        <!-- Loading Overlay Component -->
+        @include('components.loading-overlay')
+
         @stack('scripts')
     </body>
 
