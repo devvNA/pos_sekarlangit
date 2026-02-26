@@ -112,7 +112,8 @@
 
     <!-- Modal Create -->
     <div class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-2 sm:p-4" id="createModal">
-        <div class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-4 sm:p-5 shadow-xl">
+        <div
+            class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-4 sm:p-5 shadow-xl">
             <div class="flex items-center justify-between">
                 <h3 class="text-base font-bold" id="createModalTitle">Tambah Kas</h3>
                 <button class="text-black/60 hover:text-black" onclick="closeCreateModal()">&times;</button>
@@ -193,7 +194,7 @@
 
                 <div class="flex gap-2 pt-2">
                     <button class="btn-secondary flex-1" type="button" onclick="closeCreateModal()">Batal</button>
-                    <button class="btn-primary flex-1" type="submit">Simpan</button>
+                    <button class="btn-primary flex-1" type="submit" data-loading-text="Menyimpan...">Simpan</button>
                 </div>
             </form>
         </div>
@@ -201,7 +202,8 @@
 
     <!-- Modal Edit -->
     <div class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-2 sm:p-4" id="editModal">
-        <div class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-4 sm:p-5 shadow-xl">
+        <div
+            class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-4 sm:p-5 shadow-xl">
             <div class="flex items-center justify-between">
                 <h3 class="text-base font-bold">Edit Catatan Kas</h3>
                 <button class="text-black/60 hover:text-black" onclick="closeEditModal()">&times;</button>
@@ -287,7 +289,7 @@
 
                 <div class="flex gap-2 pt-2">
                     <button class="btn-secondary flex-1" type="button" onclick="closeEditModal()">Batal</button>
-                    <button class="btn-primary flex-1" type="submit">Update</button>
+                    <button class="btn-primary flex-1" type="submit" data-loading-text="Menyimpan...">Update</button>
                 </div>
             </form>
         </div>

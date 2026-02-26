@@ -148,14 +148,16 @@
                     <textarea name="note" class="w-full rounded-lg border border-black/20 bg-white px-3 py-2" rows="2"
                         placeholder="Catatan transaksi (opsional)">{{ old('note') }}</textarea>
                 </div>
-                <button class="btn-primary w-full" type="submit">Simpan & Cetak Struk</button>
+                <button class="btn-primary w-full" type="submit" data-loading-text="Menyimpan...">Simpan & Cetak
+                    Struk</button>
             </form>
         </aside>
     </div>
 
     {{-- Modal Scan Barcode --}}
     <div id="scan-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-2 sm:p-4">
-        <div class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-4 sm:p-6 shadow-xl">
+        <div
+            class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-4 sm:p-6 shadow-xl">
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-bold">Scan Barcode</h3>
                 <button id="close-scan-modal" type="button" class="rounded-full p-1 text-gray-500 hover:bg-gray-100">
@@ -206,7 +208,7 @@
                         <input id="modal-barcode-input" name="barcode"
                             class="flex-1 rounded-lg border border-black/20 bg-white px-3 py-2 text-sm"
                             placeholder="Masukkan barcode" type="text" />
-                        <button class="btn-primary" type="submit">Tambah</button>
+                        <button class="btn-primary" type="submit" data-loading-text="Menambahkan...">Tambah</button>
                     </form>
                 </div>
             </div>
@@ -215,7 +217,8 @@
 
     {{-- Modal Input Quantity --}}
     <div id="quantity-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-2 sm:p-4">
-        <div class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-4 sm:p-6 shadow-xl">
+        <div
+            class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-4 sm:p-6 shadow-xl">
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-bold">Tambah ke Keranjang</h3>
                 <button id="close-quantity-modal" type="button"
@@ -279,7 +282,8 @@
 
                     <div class="mt-6 flex gap-2">
                         <button type="button" id="cancel-quantity" class="btn-secondary flex-1">Batal</button>
-                        <button type="submit" class="btn-primary flex-1">Tambah ke Keranjang</button>
+                        <button type="submit" class="btn-primary flex-1" data-loading-text="Menambahkan...">Tambah ke
+                            Keranjang</button>
                     </div>
                 </form>
             </div>

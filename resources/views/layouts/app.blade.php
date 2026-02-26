@@ -152,7 +152,7 @@
                                 @csrf
                                 <button type="submit"
                                     class="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold text-white transition hover:bg-red-600"
-                                    style="background-color: #1b6b42;">
+                                    style="background-color: #1b6b42;" data-loading-text="Keluar...">
                                     <span>Logout</span>
                                 </button>
                             </form>

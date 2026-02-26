@@ -33,7 +33,8 @@
                 @enderror
             </div>
             <div>
-                <label class="mb-1 block text-xs font-semibold text-black/60">Barcode (EAN-13) <span class="font-normal text-black/40">- Opsional</span></label>
+                <label class="mb-1 block text-xs font-semibold text-black/60">Barcode (EAN-13) <span
+                        class="font-normal text-black/40">- Opsional</span></label>
                 <div class="flex gap-2">
                     <input id="inventory-barcode-input" name="barcode" value="{{ old('barcode', $product->barcode) }}"
                         class="flex-1 rounded-lg border border-black/20 bg-white px-3 py-2 text-sm" type="text"
@@ -95,7 +96,8 @@
             <div>
                 <label class="mb-1 block text-xs font-semibold text-black/60">Harga Beli</label>
                 <div class="relative">
-                    <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">Rp</span>
+                    <span
+                        class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">Rp</span>
                     <input name="price_buy" value="{{ old('price_buy', (int) $product->price_buy) }}"
                         class="w-full rounded-lg border border-black/20 bg-white pl-9 pr-3 py-2 text-sm" type="text"
                         inputmode="numeric" data-rupiah autocomplete="off" required />
@@ -107,7 +109,8 @@
             <div>
                 <label class="mb-1 block text-xs font-semibold text-black/60">Harga Jual</label>
                 <div class="relative">
-                    <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">Rp</span>
+                    <span
+                        class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">Rp</span>
                     <input name="price_sell" value="{{ old('price_sell', (int) $product->price_sell) }}"
                         class="w-full rounded-lg border border-black/20 bg-white pl-9 pr-3 py-2 text-sm" type="text"
                         inputmode="numeric" data-rupiah autocomplete="off" required />
@@ -136,12 +139,13 @@
             </div>
             <div class="md:col-span-2">
                 <label class="inline-flex items-center gap-2 text-sm">
-                    <input name="active" value="1" class="h-4 w-4" type="checkbox" @checked(old('active') === null ? $product->active : (bool) old('active')) />
+                    <input name="active" value="1" class="h-4 w-4" type="checkbox"
+                        @checked(old('active') === null ? $product->active : (bool) old('active')) />
                     <span>Produk aktif</span>
                 </label>
             </div>
             <div class="md:col-span-2 flex gap-2">
-                <button class="btn-primary" type="submit">Simpan Perubahan</button>
+                <button class="btn-primary" type="submit" data-loading-text="Menyimpan...">Simpan Perubahan</button>
                 <a class="btn-secondary" href="{{ route('inventory.index') }}">Batal</a>
             </div>
         </form>
@@ -149,7 +153,8 @@
 
     {{-- Modal Scan Barcode --}}
     <div id="inventory-scan-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-2 sm:p-4">
-        <div class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-4 sm:p-6 shadow-xl">
+        <div
+            class="w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-black/10 bg-white p-4 sm:p-6 shadow-xl">
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-bold">Scan Barcode</h3>
                 <button id="close-inventory-scan-modal" type="button"

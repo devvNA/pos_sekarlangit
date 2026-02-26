@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (event.key === 'Enter') {
                 event.preventDefault();
                 if (modalAddForm) {
-                    modalAddForm.submit();
+                    modalAddForm.requestSubmit();
                 }
             }
         });
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                             playBeep();
                             if (modalAddForm) {
-                                modalAddForm.submit();
+                                modalAddForm.requestSubmit();
                             }
                         }
                     );
@@ -320,3 +320,56 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ── Global form submission loading indicator ──
+(function () {
+    const SPINNER_SVG =
+        '<svg class="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">' +
+        '<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity:0.25"></circle>' +
+        '<path fill="currentColor" style="opacity:0.75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>' +
+        '</svg>';
+
+    const DEFAULT_LOADING_TEXT = 'Memproses...';
+
+    document.addEventListener('submit', function (event) {
+        const form = event.target;
+
+        if (form.hasAttribute('data-no-loading')) return;
+
+        if (form.dataset.submitting === 'true') {
+            event.preventDefault();
+            return;
+        }
+
+        let button = event.submitter;
+        if (!button) {
+            button = form.querySelector('button[type="submit"], input[type="submit"]');
+        }
+
+        if (!button || button.disabled) return;
+        if (button.hasAttribute('data-no-loading')) return;
+
+        form.dataset.submitting = 'true';
+
+        const loadingText = button.getAttribute('data-loading-text') || DEFAULT_LOADING_TEXT;
+
+        button.dataset.originalHtml = button.innerHTML;
+        button.innerHTML = '<span class="inline-flex items-center justify-center gap-2">' + SPINNER_SVG + '<span>' + loadingText + '</span></span>';
+        button.disabled = true;
+        button.classList.add('opacity-70', 'cursor-not-allowed');
+    });
+
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            document.querySelectorAll('form[data-submitting="true"]').forEach(function (form) {
+                delete form.dataset.submitting;
+            });
+            document.querySelectorAll('button[data-original-html]').forEach(function (button) {
+                button.innerHTML = button.dataset.originalHtml;
+                button.disabled = false;
+                button.classList.remove('opacity-70', 'cursor-not-allowed');
+                delete button.dataset.originalHtml;
+            });
+        }
+    });
+})();

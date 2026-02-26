@@ -115,6 +115,46 @@
             background: #059669;
         }
 
+        .alert-info {
+            background: #dbeafe;
+            border: 1px solid #3b82f6;
+            color: #1e40af;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            line-height: 1.5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #92400e;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            line-height: 1.5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            display: none;
+        }
+
+        .alert-warning strong {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .alert-warning ul {
+            margin: 8px 0 0 0;
+            padding-left: 20px;
+        }
+
+        .alert-warning li {
+            margin: 4px 0;
+        }
+
         @media print {
             body {
                 background: white;
@@ -129,6 +169,8 @@
             }
 
             .success-alert,
+            .alert-info,
+            .alert-warning,
             .action-buttons {
                 display: none !important;
             }
@@ -166,6 +208,22 @@
                 <strong>✓ {{ session('success') }}</strong>
             </div>
         @endif
+
+        <div class="alert-info">
+            <strong>ℹ️ Tips Cetak Struk Thermal:</strong><br>
+            Pastikan printer thermal Bluetooth sudah tersambung ke komputer/HP sebelum mencetak.
+        </div>
+
+        <div id="printer-warning" class="alert-warning">
+            <strong>⚠️ Printer Tidak Tersedia</strong>
+            <p>Printer tidak terdeteksi atau belum tersambung. Silakan:</p>
+            <ul>
+                <li>Nyalakan printer thermal Bluetooth Anda</li>
+                <li>Pastikan printer sudah terpasang (paired) dengan perangkat ini</li>
+                <li>Refresh halaman setelah printer terhubung</li>
+                <li>Atau gunakan tombol "Simpan PDF" sebagai alternatif</li>
+            </ul>
+        </div>
 
         <div class="receipt-wrapper">
             <div class="receipt">
@@ -211,17 +269,116 @@
             <a href="{{ route('pos.index') }}" class="btn btn-secondary">
                 ← Kembali ke Kasir
             </a>
-            <button class="btn btn-primary" type="button" onclick="window.print()">
-                Cetak Struk
+            <button id="print-btn" class="btn btn-primary" type="button" onclick="handlePrint()">
+                🖨️ Cetak Struk
             </button>
         </div>
     </div>
 
     <script>
+        let printerAvailable = true;
+
+        // Cek ketersediaan printer
+        async function checkPrinter() {
+            try {
+                // Cek apakah browser support print API
+                if (!window.print) {
+                    showPrinterWarning();
+                    return false;
+                }
+
+                // Untuk browser modern, cek printer devices jika API tersedia
+                if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+                    try {
+                        const devices = await navigator.mediaDevices.enumerateDevices();
+                        // Note: Browser tidak bisa langsung deteksi printer, hanya media devices
+                        // Jadi kita asumsikan printer tersedia jika browser support print
+                        printerAvailable = true;
+                    } catch (err) {
+                        // Jika gagal enumerate devices, tetap lanjut ke print
+                        printerAvailable = true;
+                    }
+                }
+
+                return true;
+            } catch (error) {
+                showPrinterWarning();
+                return false;
+            }
+        }
+
+        function showPrinterWarning() {
+            const warning = document.getElementById('printer-warning');
+            if (warning) {
+                warning.style.display = 'block';
+            }
+            printerAvailable = false;
+        }
+
+        function hidePrinterWarning() {
+            const warning = document.getElementById('printer-warning');
+            if (warning) {
+                warning.style.display = 'none';
+            }
+        }
+
+        function handlePrint() {
+            const printBtn = document.getElementById('print-btn');
+            const originalText = printBtn.innerHTML;
+
+            // Ubah button text
+            printBtn.innerHTML = '🖨️ Membuka printer...';
+            printBtn.disabled = true;
+
+            try {
+                // Trigger print dialog
+                window.print();
+
+                // Reset button setelah beberapa saat
+                setTimeout(() => {
+                    printBtn.innerHTML = originalText;
+                    printBtn.disabled = false;
+                }, 1000);
+            } catch (error) {
+                console.error('Print error:', error);
+                alert(
+                    '❌ Gagal membuka dialog print.\n\nPastikan:\n• Printer tersambung\n• Browser mengizinkan print\n• Tidak ada popup blocker'
+                );
+
+                printBtn.innerHTML = originalText;
+                printBtn.disabled = false;
+                showPrinterWarning();
+            }
+        }
+
+        // Event handler untuk afterprint
+        window.addEventListener('afterprint', function() {
+            const printBtn = document.getElementById('print-btn');
+            if (printBtn) {
+                printBtn.innerHTML = '🖨️ Cetak Struk';
+                printBtn.disabled = false;
+            }
+        });
+
+        // Event handler untuk beforeprint
+        window.addEventListener('beforeprint', function() {
+            hidePrinterWarning();
+        });
+
+        // Keyboard shortcut: Ctrl+P atau Cmd+P
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                handlePrint();
+            }
+        });
+
         // Auto focus untuk kemudahan keyboard navigation
         document.addEventListener('DOMContentLoaded', function() {
+            checkPrinter();
+
             // Optional: Auto print setelah load (uncomment jika diinginkan)
-            // setTimeout(() => window.print(), 500);
+            // setTimeout(() => handlePrint(), 800);
         });
     </script>
 </body>
