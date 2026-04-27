@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use App\Models\User;
@@ -17,9 +18,9 @@ class DatabaseSeeder extends Seeder
     {
         // Create default admin user
         User::firstOrCreate(
-            ['email' => 'admin@sekarlangit.com'],
+            ['email' => 'admin@app.com'],
             [
-                'name'     => 'Admin Toko',
+                'name'     => 'Administrator',
                 'password' => Hash::make('admin123'),
             ]
         );
