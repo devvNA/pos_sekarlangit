@@ -53,6 +53,15 @@
                 </div>
             @endif
 
+            <!-- Demo Account -->
+            <div class="mb-6 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+                <p class="font-semibold">Akun Demo</p>
+                <div class="mt-2 space-y-1 font-mono text-xs sm:text-sm">
+                    <p>Email: <span class="font-semibold">admin@app.com</span></p>
+                    <p>Password: <span class="font-semibold">password</span></p>
+                </div>
+            </div>
+
             <!-- Login Form -->
             <form method="POST" action="{{ route('authenticate') }}" class="space-y-6">
                 @csrf
